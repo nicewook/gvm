@@ -25,7 +25,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile string
+	goroot  string
+	gopath  string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -81,6 +85,12 @@ func initConfig() {
 		// Search config in home directory with name ".gvm" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".gvm")
+
+		// JHS custom config
+		goroot = os.Getenv("GOROOT")
+		gopath = os.Getenv("GOPATH")
+		fmt.Println("GOROOT:", goroot)
+		fmt.Println("GOPATH:", gopath)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
