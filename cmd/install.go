@@ -20,6 +20,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"sync"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -42,8 +43,10 @@ func install(cmd *cobra.Command, args []string) {
 
 	installVersion := "go" + args[0]
 	installURL := "golang.org/dl/" + installVersion
+	downloadExe := gopath + "\\bin\\" + installVersion + ".exe"
 	fmt.Println("installVersion: ", installVersion)
 	fmt.Println("installURL: ", installURL)
+	fmt.Println("downloadExe: ", downloadExe)
 
 	// command wants to run
 	// refer to: https://www.ardanlabs.com/blog/2020/04/modules-06-vendoring.html
@@ -54,7 +57,7 @@ func install(cmd *cobra.Command, args []string) {
 	getCmd := exec.Command("go", "get", installURL)
 	getCmd.Stdout = os.Stdout
 	getCmd.Stderr = os.Stderr
-	time.Sleep(5 * time.Second)
+
 	downloadCmd := exec.Command(installVersion, "download")
 	downloadCmd.Stdout = os.Stdout
 	downloadCmd.Stderr = os.Stderr
@@ -62,6 +65,21 @@ func install(cmd *cobra.Command, args []string) {
 	if err := getCmd.Run(); err != nil {
 		log.Fatal(err)
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		for !fileExist(downloadExe) {
+			fmt.Println("not yet downloaded exe file for download go SDK")
+			time.Sleep(1000 * time.Millisecond)
+		}
+		fmt.Println("Done")
+		wg.Done()
+	}()
+	wg.Wait()
+
+	fmt.Println("Start Download:", fileExist(downloadExe))
+
 	fmt.Println("now downloading")
 	if err := downloadCmd.Run(); err != nil {
 		log.Fatal(err)
