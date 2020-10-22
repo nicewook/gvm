@@ -17,6 +17,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -31,9 +35,37 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install called")
-	},
+	Run: install,
+}
+
+func install(cmd *cobra.Command, args []string) {
+
+	installVersion := "go" + args[0]
+	installURL := "golang.org/dl/" + installVersion
+	fmt.Println("installVersion: ", installVersion)
+	fmt.Println("installURL: ", installURL)
+
+	// command wants to run
+	// refer to: https://www.ardanlabs.com/blog/2020/04/modules-06-vendoring.html
+	/*
+		go get golang.org/dl/go1.13.10
+		go1.13.10 download
+	*/
+	getCmd := exec.Command("go", "get", installURL)
+	getCmd.Stdout = os.Stdout
+	getCmd.Stderr = os.Stderr
+	time.Sleep(5 * time.Second)
+	downloadCmd := exec.Command(installVersion, "download")
+	downloadCmd.Stdout = os.Stdout
+	downloadCmd.Stderr = os.Stderr
+
+	if err := getCmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("now downloading")
+	if err := downloadCmd.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func init() {
