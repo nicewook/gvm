@@ -47,16 +47,25 @@ func versionExist(file string) bool {
 }
 
 func use(cmd *cobra.Command, args []string) {
+<<<<<<< HEAD
 	// we want to use this version
 	useVersion := "go" + args[0]
 	useExe := useVersion + ".exe"
 	// fmt.Printf("version: %s, exe: %s\n", useVersion, useExe)
+=======
+	useVersion := "go" + args[0]
+	useExe := useVersion + ".exe"
+	fmt.Printf("version: %s, exe: %s\n", useVersion, useExe)
+>>>>>>> On Implementing use command
 
 	if !versionExist(useExe) {
 		log.Fatal("%s is not installed version", useExe)
 	}
 
+<<<<<<< HEAD
 	// get current go.exe info
+=======
+>>>>>>> On Implementing use command
 	getPathCmd := exec.Command("where", "go.exe")
 	getCurVersionCmd := exec.Command("go", "version")
 
