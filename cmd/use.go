@@ -17,6 +17,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -31,9 +36,74 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("use called")
-	},
+	Args: cobra.ExactArgs(1),
+	Run:  use,
+}
+
+func versionExist(file string) bool {
+	filePath := filepath.Join(gopath, "bin", file)
+	fmt.Println("want to use version of: ", filePath)
+	return fileExist(filePath)
+}
+
+func use(cmd *cobra.Command, args []string) {
+	// we want to use this version
+	useVersion := "go" + args[0]
+	useExe := useVersion + ".exe"
+	// fmt.Printf("version: %s, exe: %s\n", useVersion, useExe)
+
+	if !versionExist(useExe) {
+		log.Fatal("%s is not installed version", useExe)
+	}
+
+	// get current go.exe info
+	getPathCmd := exec.Command("where", "go.exe")
+	getCurVersionCmd := exec.Command("go", "version")
+
+	b, err := getPathCmd.Output()
+	if err != nil {
+		log.Fatal("getPathCmd: ", err)
+	}
+	curFilePath := strings.TrimSpace(string(b)) // needed to remove space
+
+	// if exist then rename it. ex) go.exe -> go1.14.1.exe
+	if fileExist(curFilePath) {
+		// then we need file to rename
+		b, err := getCurVersionCmd.Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		versionOutput := strings.Split(string(b), " ")
+		curVersionExe := versionOutput[2] + ".exe"
+		fmt.Println("curVersionExe: ", curVersionExe)
+
+		// rename
+		dir := filepath.Dir(curFilePath)
+		newFilePath := filepath.Join(dir, curVersionExe)
+		if err := os.Rename(curFilePath, newFilePath); err != nil {
+			log.Fatal("os.Rename: ", err)
+		}
+		if fileExist(newFilePath) {
+			fmt.Println("rename succeeded")
+		}
+
+		// temp code for restore
+		// if err := os.Rename(newFilePath, curFilePath); err != nil {
+		// 	log.Fatal("os.Rename: ", err)
+		// }
+	}
+
+	// then copy the go<required-version>.exe to go.exe
+	filePath := filepath.Join(gopath, "bin", useExe)
+	copyFile(filePath, renameToGo(filePath))
+
+	fmt.Println("now we can use ", useVersion)
+	getCurVersionCmd2 := exec.Command("go", "version")
+	v, err := getCurVersionCmd2.Output()
+	if err != nil {
+		log.Fatal("getCurVersionCmd2:", err)
+	}
+	fmt.Println(string(v))
 }
 
 func init() {

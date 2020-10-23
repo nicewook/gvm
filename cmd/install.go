@@ -63,7 +63,7 @@ func install(cmd *cobra.Command, args []string) {
 	downloadCmd.Stderr = os.Stderr
 
 	if err := getCmd.Run(); err != nil {
-		log.Fatal(err)
+		log.Fatal("getCmd:", err)
 	}
 
 	var wg sync.WaitGroup
