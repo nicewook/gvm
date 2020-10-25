@@ -17,6 +17,10 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"path/filepath"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
@@ -36,6 +40,22 @@ to quickly create a Cobra application.`,
 
 func list(cmd *cobra.Command, args []string) {
 	fmt.Println("list called")
+	dirPath := filepath.Join(gopath, "bin")
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		log.Fatal("ReadDir: ", err)
+	}
+
+	var re = regexp.MustCompile(`(?m)go\d+.\d+.\d+.exe`)
+	var installedVersions []string
+	// https://regex101.com/r/zxxWBl/1
+	for _, file := range files {
+		name := file.Name()
+		if re.MatchString(name) {
+			fmt.Println(name)
+			installedVersions = append(installedVersions, name)
+		}
+	}
 }
 
 func init() {
