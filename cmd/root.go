@@ -25,6 +25,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	downloadPage = "https://golang.org/dl"
+)
+
 var (
 	cfgFile string
 	goroot  string

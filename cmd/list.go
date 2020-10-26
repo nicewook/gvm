@@ -21,6 +21,7 @@ import (
 	"log"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -38,24 +39,33 @@ to quickly create a Cobra application.`,
 	Run: list,
 }
 
-func list(cmd *cobra.Command, args []string) {
-	fmt.Println("list called")
+func getLocalList() []string {
 	dirPath := filepath.Join(gopath, "bin")
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Fatal("ReadDir: ", err)
 	}
 
-	var re = regexp.MustCompile(`(?m)go\d+.\d+.\d+.exe`)
+	// https://regex101.com/r/zxxWBl/3
+	var re = regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}.exe`)
 	var installedVersions []string
 	// https://regex101.com/r/zxxWBl/1
 	for _, file := range files {
 		name := file.Name()
 		if re.MatchString(name) {
+			name = strings.TrimRight(name, ".exe")
 			fmt.Println(name)
 			installedVersions = append(installedVersions, name)
 		}
 	}
+	return installedVersions
+}
+
+func list(cmd *cobra.Command, args []string) {
+	fmt.Println("list called")
+	list := getLocalList()
+	fmt.Println("-- installed versions")
+	fmt.Println(list)
 }
 
 func init() {

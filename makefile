@@ -17,3 +17,9 @@ list:
 	$(GO) mod vendor
 	$(GO) build -o gvm.exe main.go
 	gvm list
+
+listall:
+	$(GO) mod tidy
+	$(GO) mod vendor
+	$(GO) build -o gvm.exe main.go
+	gvm listall
