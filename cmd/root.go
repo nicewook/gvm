@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -33,6 +34,10 @@ var (
 	cfgFile string
 	goroot  string
 	gopath  string
+
+	// cache values
+	usingVer  string
+	goVerList []string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -71,6 +76,9 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// log settings
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -95,6 +103,9 @@ func initConfig() {
 		gopath = os.Getenv("GOPATH")
 		fmt.Println("GOROOT:", goroot)
 		fmt.Println("GOPATH:", gopath)
+
+		// init go version list installed in local
+		goVerList = getLocalList()
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

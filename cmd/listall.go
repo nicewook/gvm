@@ -89,7 +89,7 @@ func getRemoteList() []string {
 		vb := strings.TrimPrefix(remoteVersions[j], "go")
 		vB, _ := version.NewVersion(vb)
 
-		fmt.Println("va, vb: ", va, vb)
+		// fmt.Println("va, vb: ", va, vb)
 
 		return vA.LessThan(vB)
 	})
@@ -97,15 +97,17 @@ func getRemoteList() []string {
 }
 
 func listAll(cmd *cobra.Command, args []string) {
-	list := getLocalList()
-	fmt.Println("--local list")
-	for _, l := range list {
-		fmt.Println(l)
-	}
 	remoteList := getRemoteList()
 	fmt.Println("--remote list")
 	for _, l := range remoteList {
-		fmt.Println(l)
+		_, found := find(goVerList, l)
+		if found {
+			if err := colorPrint(green, l); err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			fmt.Println(l)
+		}
 	}
 }
 

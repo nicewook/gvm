@@ -43,7 +43,7 @@ func getLocalList() []string {
 	dirPath := filepath.Join(gopath, "bin")
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		log.Fatal("ReadDir: ", err)
+		log.Fatal("ReadDir: ", err, dirPath)
 	}
 
 	// https://regex101.com/r/zxxWBl/3
