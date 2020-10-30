@@ -22,18 +22,20 @@ import (
 
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
+	homeDir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 const (
 	downloadPage = "https://golang.org/dl"
+
+	usingVerCfg = "usingVer"
 )
 
 var (
 	cfgFile string
-	goroot  string
-	gopath  string
+	goRoot  string
+	goPath  string
 
 	// cache values
 	usingVer  string
@@ -88,7 +90,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Find home directory.
-		home, err := homedir.Dir()
+		home, err := homeDir.Dir()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -99,10 +101,10 @@ func initConfig() {
 		viper.SetConfigName(".gvm")
 
 		// JHS custom config
-		goroot = os.Getenv("GOROOT")
-		gopath = os.Getenv("GOPATH")
-		fmt.Println("GOROOT:", goroot)
-		fmt.Println("GOPATH:", gopath)
+		goRoot = os.Getenv("GOROOT")
+		goPath = os.Getenv("GOPATH")
+		fmt.Println("GOROOT:", goRoot)
+		fmt.Println("GOPATH:", goPath)
 
 		// init go version list installed in local
 		goVerList = getLocalList()

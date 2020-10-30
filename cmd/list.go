@@ -40,7 +40,7 @@ to quickly create a Cobra application.`,
 }
 
 func getLocalList() []string {
-	dirPath := filepath.Join(gopath, "bin")
+	dirPath := filepath.Join(goPath, "bin")
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Fatal("ReadDir: ", err, dirPath)
@@ -54,7 +54,7 @@ func getLocalList() []string {
 		name := file.Name()
 		if re.MatchString(name) {
 			name = strings.TrimRight(name, ".exe")
-			fmt.Println(name)
+			// fmt.Println(name)
 			installedVersions = append(installedVersions, name)
 		}
 	}
@@ -62,10 +62,13 @@ func getLocalList() []string {
 }
 
 func list(cmd *cobra.Command, args []string) {
-	fmt.Println("list called")
+	fmt.Println("--locally installed go SDK list")
 	list := getLocalList()
-	fmt.Println("-- installed versions")
-	fmt.Println(list)
+	sortGoSDKList(list)
+	for _, l := range list {
+		fmt.Println(l)
+	}
+
 }
 
 func init() {

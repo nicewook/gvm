@@ -43,7 +43,7 @@ func install(cmd *cobra.Command, args []string) {
 
 	installVersion := "go" + args[0]
 	installURL := "golang.org/dl/" + installVersion
-	downloadExe := gopath + "\\bin\\" + installVersion + ".exe"
+	downloadExe := goPath + "\\bin\\" + installVersion + ".exe"
 	fmt.Println("installVersion: ", installVersion)
 	fmt.Println("installURL: ", installURL)
 	fmt.Println("downloadExe: ", downloadExe)
@@ -81,6 +81,7 @@ func install(cmd *cobra.Command, args []string) {
 	fmt.Println("Start Download:", fileExist(downloadExe))
 
 	fmt.Println("now downloading")
+	time.Sleep(1 * time.Second)
 	if err := downloadCmd.Run(); err != nil {
 		log.Fatal(err)
 	}

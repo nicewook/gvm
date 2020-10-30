@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // useCmd represents the use command
@@ -41,14 +42,18 @@ to quickly create a Cobra application.`,
 }
 
 func versionExist(file string) bool {
-	filePath := filepath.Join(gopath, "bin", file)
+	filePath := filepath.Join(goPath, "bin", file)
 	fmt.Println("want to use version of: ", filePath)
 	return fileExist(filePath)
 }
 
-func use(cmd *cobra.Command, args []string) {
+func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
-	useVersion := "go" + args[0]
+	if version == "system" {
+		fmt.Println("use system version")
+		return
+	}
+	useVersion := "go" + version
 	useExe := useVersion + ".exe"
 	// fmt.Printf("version: %s, exe: %s\n", useVersion, useExe)
 
@@ -94,16 +99,24 @@ func use(cmd *cobra.Command, args []string) {
 	}
 
 	// then copy the go<required-version>.exe to go.exe
-	filePath := filepath.Join(gopath, "bin", useExe)
+	filePath := filepath.Join(goPath, "bin", useExe)
 	copyFile(filePath, renameToGo(filePath))
 
 	fmt.Println("now we can use ", useVersion)
+	// save usingVer
+	usingVer = useVersion // ex) go1.13.2
+	viper.Set(usingVerCfg, usingVer)
+
 	getCurVersionCmd2 := exec.Command("go", "version")
 	v, err := getCurVersionCmd2.Output()
 	if err != nil {
 		log.Fatal("getCurVersionCmd2:", err)
 	}
 	fmt.Println(string(v))
+}
+
+func use(cmd *cobra.Command, args []string) {
+	useVersion(args[0])
 }
 
 func init() {

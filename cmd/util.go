@@ -7,6 +7,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
+
+	"github.com/hashicorp/go-version"
 )
 
 func fileExist(filePath string) bool {
@@ -80,4 +84,34 @@ func colorPrint(color string, msg string) error {
 	}
 	fmt.Print(string(colorReset))
 	return nil
+}
+
+func goroot(version string) (string, error) {
+	home, err := homedir()
+	if err != nil {
+		return "", fmt.Errorf("failed to get home directory: %v", err)
+	}
+	return filepath.Join(home, "sdk", version), nil
+}
+
+func homedir() (string, error) {
+	if dir := os.Getenv("USERPROFILE"); dir != "" {
+		return dir, nil
+	}
+	return "", errors.New("can't find user home directory; %USERPROFILE% is empty")
+}
+
+func sortGoSDKList(list []string) {
+
+	sort.Slice(list, func(i, j int) bool {
+		va := strings.TrimPrefix(list[i], "go")
+		vA, _ := version.NewVersion(va)
+
+		vb := strings.TrimPrefix(list[j], "go")
+		vB, _ := version.NewVersion(vb)
+
+		// fmt.Println("va, vb: ", va, vb)
+
+		return vA.LessThan(vB)
+	})
 }

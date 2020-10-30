@@ -17,6 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -38,18 +41,42 @@ to quickly create a Cobra application.`,
 // see how download works https://go.googlesource.com/dl/+/refs/heads/master/internal/version/version.go
 // git repo: git clone https://go.googlesource.com/dl
 func uninstall(cmd *cobra.Command, args []string) {
-	uninstallVers := args[1:]
+	fmt.Println("args: ", args)
+	uninstallVers := args
 	_ = uninstallVers
 
-	fmt.Println("uninstall called")
+	fmt.Println("uninstall called to uninstall: ", uninstallVers)
 
-	// check if it's used version
+	for _, v := range uninstallVers {
+		ver := "go" + v
+		verExe := ver + ".exe"
+		// check if it's used version
+		// then change to use system version
+		if usingVer == v {
+			useVersion("system")
+		}
 
-	// then change to use system version
+		// remove gopath\bin\go<version>.exe
+		filePath := filepath.Join(goPath, "bin", verExe)
+		if err := os.Remove(filePath); err != nil {
+			log.Println(err)
+		} else {
+			fmt.Println(filePath, " is removed")
+		}
 
-	// remove gopath\bin\go<version>.exe
+		// find home\sdk\<goversion> folder and remove ex) C:\Users\hsjeong\sdk\go1.13.3
+		sdkPath, err := goroot(ver)
+		if err != nil {
+			log.Fatalf("%s: %v", ver, err)
+		}
 
-	// remove folder of the home\sdk\<version folder>
+		// remove folder of the home\sdk\<version folder>
+		if err := os.RemoveAll(sdkPath); err != nil {
+			log.Printf("fail to remove sdk path: %v\n", err)
+		} else {
+			fmt.Println(sdkPath, " folder is removed or no such folder exist")
+		}
+	}
 }
 
 func init() {

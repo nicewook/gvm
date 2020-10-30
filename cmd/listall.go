@@ -19,11 +19,8 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-	"sort"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/hashicorp/go-version"
 	"github.com/spf13/cobra"
 )
 
@@ -81,24 +78,13 @@ func getRemoteList() []string {
 	}
 
 	// sort
-
-	sort.Slice(remoteVersions, func(i, j int) bool {
-		va := strings.TrimPrefix(remoteVersions[i], "go")
-		vA, _ := version.NewVersion(va)
-
-		vb := strings.TrimPrefix(remoteVersions[j], "go")
-		vB, _ := version.NewVersion(vb)
-
-		// fmt.Println("va, vb: ", va, vb)
-
-		return vA.LessThan(vB)
-	})
+	sortGoSDKList(remoteVersions)
 	return remoteVersions
 }
 
 func listAll(cmd *cobra.Command, args []string) {
 	remoteList := getRemoteList()
-	fmt.Println("--remote list")
+	fmt.Println("--remote go SDK list")
 	for _, l := range remoteList {
 		_, found := find(goVerList, l)
 		if found {
