@@ -69,7 +69,7 @@ func getRemoteList() []string {
 	fmt.Println("count:", count)
 
 	// regex for go version
-	var re = regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}`)
+	re := regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}`)
 	// https://regex101.com/r/zxxWBl/1
 	for _, ver := range data {
 		if re.MatchString(ver) {
@@ -79,6 +79,7 @@ func getRemoteList() []string {
 
 	// sort
 	sortGoSDKList(remoteVersions)
+	remoteVersions = append(remoteVersions, systemGo)
 	return remoteVersions
 }
 
