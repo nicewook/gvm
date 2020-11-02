@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -47,10 +48,59 @@ func versionExist(file string) bool {
 	return fileExist(filePath)
 }
 
+func useSystemGo() {
+
+	systemGoPath := filepath.Join(goRoot, "bin")
+	// if err := filepath.Walk(systemGoPath, func(path string, info os.FileInfo, err error) error {
+	// 	files = append(files, path)
+	// 	return nil
+	// }); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	//
+	files, err := ioutil.ReadDir(systemGoPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var fNames []string
+	for _, f := range files {
+		fNames = append(fNames, f.Name())
+	}
+	fmt.Println("files: ", fNames)
+
+	for _, v := range fNames {
+		if v == "go.exe" {
+			fmt.Println("you already use system Go SDK")
+			return
+		} else if strings.Contains(v, "go") {
+			fmt.Println("trying to use system Go SDK")
+			// rename
+			fmt.Println("v: ", v)
+			curGoExe := filepath.Join(systemGoPath, v)
+			goExe := filepath.Join(systemGoPath, "go.exe")
+			if err := os.Rename(curGoExe, goExe); err != nil {
+				log.Fatal(err)
+			}
+
+			// remove gopath go.exe
+			if err := os.Remove(filepath.Join(goPath, "bin", "go.exe")); err != nil {
+				fmt.Println("fail to remove go.exe in GOPATH: ", err)
+			} else {
+				fmt.Println("go.exe in GOPATH removed")
+				fmt.Println("now using system Go SDK")
+			}
+			return
+		}
+	}
+	log.Fatal("no Go SDK in GOROOT")
+}
+
 func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
-	if version == "system" {
+	if version == systemGo {
 		fmt.Println("use system version")
+		useSystemGo()
 		return
 	}
 	useVersion := "go" + version

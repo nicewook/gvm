@@ -79,6 +79,7 @@ func getRemoteList() []string {
 
 	// sort
 	sortGoSDKList(remoteVersions)
+	remoteVersions = append(remoteVersions, systemGo)
 	return remoteVersions
 }
 

@@ -30,6 +30,7 @@ const (
 	downloadPage = "https://golang.org/dl"
 
 	usingVerCfg = "usingVer"
+	systemGo    = "system"
 )
 
 var (
