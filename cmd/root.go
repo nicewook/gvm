@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/cobra"
 
 	homeDir "github.com/mitchellh/go-homedir"
+	goverbose "github.com/paulvollmer/go-verbose"
 	"github.com/spf13/viper"
 )
 
@@ -41,6 +42,7 @@ var (
 	// cache values
 	usingVer  string
 	goVerList []string
+	verbose   bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -75,6 +77,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gvm.yaml)")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -100,6 +103,13 @@ func initConfig() {
 		// Search config in home directory with name ".gvm" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".gvm")
+
+		// Set verbose https://play.golang.org/p/RoRcgJV0pDV
+		fmtV := goverbose.New(os.Stdout, verbose)
+		fmtV.Println("a")
+		fmtV.Print("a")
+		a := 10
+		fmtV.Printf("a: %v", a)
 
 		// JHS custom config
 		goRoot = os.Getenv("GOROOT")
