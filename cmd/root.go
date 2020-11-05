@@ -106,16 +106,14 @@ func initConfig() {
 
 		// Set verbose https://play.golang.org/p/RoRcgJV0pDV
 		fmtV := goverbose.New(os.Stdout, verbose)
-		fmtV.Println("a")
-		fmtV.Print("a")
 		a := 10
 		fmtV.Printf("a: %v", a)
 
 		// JHS custom config
 		goRoot = os.Getenv("GOROOT")
 		goPath = os.Getenv("GOPATH")
-		fmt.Println("GOROOT:", goRoot)
-		fmt.Println("GOPATH:", goPath)
+		fmtV.Println("GOROOT:", goRoot)
+		fmtV.Println("GOPATH:", goPath)
 
 		// init go version list installed in local
 		goVerList = getLocalList()

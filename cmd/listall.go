@@ -83,19 +83,66 @@ func getRemoteList() []string {
 	return remoteVersions
 }
 
+func columnPrint(list []string) {
+
+	calcPrintCount := func(restRows, restList int) int {
+		intResult := restList / restRows
+		floatResult := float32(restList) / float32(restRows)
+		if float32(intResult) < floatResult {
+			intResult++
+		}
+		return intResult
+	}
+
+	count := len(list)
+
+	if count < 30 {
+		for _, l := range list {
+			_, found := find(goVerList, l)
+			if found {
+				if err := colorPrint(green, l); err != nil {
+					log.Fatal(err)
+				}
+			} else {
+				fmt.Println(l)
+			}
+		}
+		return
+	}
+
+	// need column print
+
+	totalRows := 30
+	for i := 0; i < totalRows; i++ {
+		// calculate this time rowCount
+		restRows := totalRows - i
+		printCount := calcPrintCount(restRows, count)
+
+		for j := 0; j < printCount; j++ {
+			fmt.Print(list[i+j*30], "\t\t")
+		}
+		fmt.Println()
+		count -= printCount
+	}
+
+}
+
 func listAll(cmd *cobra.Command, args []string) {
 	remoteList := getRemoteList()
 	fmt.Println("--remote go SDK list")
-	for _, l := range remoteList {
-		_, found := find(goVerList, l)
-		if found {
-			if err := colorPrint(green, l); err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			fmt.Println(l)
-		}
-	}
+
+	columnPrint(remoteList)
+
+	// for _, l := range remoteList {
+	// 	_, found := find(goVerList, l)
+	// 	if found {
+	// 		if err := colorPrint(green, l); err != nil {
+	// 			log.Fatal(err)
+	// 		}
+	// 	} else {
+	// 		fmt.Println(l)
+	// 	}
+	// }
 }
 
 func init() {
