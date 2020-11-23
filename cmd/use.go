@@ -39,7 +39,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MaximumNArgs(1),
 	Run:  use,
 }
 
@@ -168,6 +168,15 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 }
 
 func use(cmd *cobra.Command, args []string) {
+	if len(args) <= 0 {
+		getCurVersionCmd := exec.Command("go", "version")
+		v, err := getCurVersionCmd.Output()
+		if err != nil {
+			log.Fatal("getCurVersionCmd:", err)
+		}
+		fmt.Println("Currently using", string(v))
+		return
+	}
 	useVersion(args[0])
 }
 
