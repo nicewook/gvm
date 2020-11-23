@@ -43,6 +43,8 @@ var (
 	usingVer  string
 	goVerList []string
 	verbose   bool
+
+	fmtV *goverbose.Verbose
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -105,9 +107,7 @@ func initConfig() {
 		viper.SetConfigName(".gvm")
 
 		// Set verbose https://play.golang.org/p/RoRcgJV0pDV
-		fmtV := goverbose.New(os.Stdout, verbose)
-		a := 10
-		fmtV.Printf("a: %v", a)
+		fmtV = goverbose.New(os.Stdout, verbose)
 
 		// JHS custom config
 		goRoot = os.Getenv("GOROOT")

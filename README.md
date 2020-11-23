@@ -7,7 +7,7 @@
 ![GitHub stars](https://img.shields.io/github/stars/nicewook/gvm?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/nicewook/gvm?style=social)
 
-Project name is a `gvm` that allows `Go developer using Windows` to use multiple go version easily.
+Project name is a `gvm` that allows `Go developers who are using Windows` to use multiple go version easily.
 
 There is already `gvm`(https://github.com/moovweb/gvm) for Linux and MacOS, but I couldn't find
 well working `gvm` for Windows OS, so the project started.
@@ -17,7 +17,7 @@ well working `gvm` for Windows OS, so the project started.
 To install `gvm` on Windows, follow these steps:
 
 ```
-<install_command>
+$ go get -u github.com/nicewook/gvm
 ```
 
 ## Using `gvm`
@@ -28,6 +28,16 @@ To install `gvm` on Windows, follow these steps:
 - list/listall
 - install/uninstall
 - use
+
+#### version
+
+#### list/listall
+
+```
+
+#### install/uninstall
+
+#### use
 
 ## Contact
 
@@ -44,3 +54,4 @@ This project uses the following license: [<license_name>](link).
 - README.md template: https://github.com/scottydocs/README-template.md
 - moovweb/gvm: https://github.com/moovweb/gvm
 - Download go verions(Bill Kennedy): https://www.ardanlabs.com/blog/2020/04/modules-06-vendoring.html
+```

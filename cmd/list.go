@@ -62,7 +62,7 @@ func getLocalList() []string {
 }
 
 func list(cmd *cobra.Command, args []string) {
-	fmt.Println("--locally installed go SDK list")
+	fmt.Println("locally installed go SDK list\n--")
 	list := getLocalList()
 	sortGoSDKList(list)
 	list = append(list, systemGo)

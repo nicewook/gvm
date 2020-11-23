@@ -58,7 +58,7 @@ func getRemoteList() []string {
 		data = append(data, ver)
 		count++
 	})
-	fmt.Println("count:", count)
+	// fmt.Println("count:", count)
 
 	doc.Find(".toggleVisible").Each(func(index int, item *goquery.Selection) {
 		ver, _ := item.Attr("id")
@@ -66,7 +66,7 @@ func getRemoteList() []string {
 		data = append(data, ver)
 		count++
 	})
-	fmt.Println("count:", count)
+	fmtV.Println("total SDK count:", count)
 
 	// regex for go version
 	re := regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}`)
@@ -129,7 +129,7 @@ func columnPrint(list []string) {
 
 func listAll(cmd *cobra.Command, args []string) {
 	remoteList := getRemoteList()
-	fmt.Println("--remote go SDK list")
+	fmt.Println("remote go SDK list\n--")
 
 	columnPrint(remoteList)
 
