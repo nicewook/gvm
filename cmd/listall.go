@@ -97,14 +97,15 @@ func columnPrint(list []string) {
 	count := len(list)
 
 	if count < 30 {
-		for _, l := range list {
-			_, found := find(goVerList, l)
+		for _, ver := range list {
+			_, found := find(goVerList, ver)
 			if found {
-				if err := colorPrint(green, l); err != nil {
+				if err := colorPrint(green, ver); err != nil {
 					log.Fatal(err)
 				}
 			} else {
-				fmt.Println(l)
+				verMsg := fmt.Sprintf("%-10v", ver)
+				fmt.Println(verMsg)
 			}
 		}
 		return
@@ -119,7 +120,19 @@ func columnPrint(list []string) {
 		printCount := calcPrintCount(restRows, count)
 
 		for j := 0; j < printCount; j++ {
-			fmt.Print(list[i+j*30], "\t\t")
+			ver := list[i+j*30]
+
+			_, found := find(goVerList, ver)
+			if found {
+				if err := colorPrint(green, ver); err != nil {
+					log.Fatal(err)
+				}
+			} else {
+				verMsg := fmt.Sprintf("%-10v", ver)
+				fmt.Print(verMsg)
+			}
+
+			// fmt.Print(ver, "\t\t")
 		}
 		fmt.Println()
 		count -= printCount
@@ -129,7 +142,7 @@ func columnPrint(list []string) {
 
 func listAll(cmd *cobra.Command, args []string) {
 	remoteList := getRemoteList()
-	fmt.Println("remote go SDK list\n--")
+	fmtV.Println("remote go SDK list\n--")
 
 	columnPrint(remoteList)
 

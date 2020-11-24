@@ -78,7 +78,8 @@ func colorPrint(color string, msg string) error {
 
 	switch color {
 	case green:
-		fmt.Printf("%s%s%s\n", string(colorGreen), msg, checkBox)
+		leftAlignMsg := fmt.Sprintf("%-10v", msg)
+		fmt.Printf("%s%s%s", string(colorGreen), leftAlignMsg, checkBox)
 	default:
 		return errors.New("not proper color")
 	}
