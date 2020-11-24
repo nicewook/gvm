@@ -18,7 +18,9 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os/exec"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/spf13/cobra"
@@ -100,13 +102,14 @@ func columnPrint(list []string) {
 		for _, ver := range list {
 			_, found := find(goVerList, ver)
 			if found {
-				if err := colorPrint(green, ver); err != nil {
+				if err := colorPrint(Green, ver); err != nil {
 					log.Fatal(err)
 				}
 			} else {
-				verMsg := fmt.Sprintf("%-10v", ver)
-				fmt.Println(verMsg)
+				verMsg := lefAlignString(ver)
+				fmt.Print(verMsg)
 			}
+			fmt.Println()
 		}
 		return
 	}
@@ -124,15 +127,44 @@ func columnPrint(list []string) {
 
 			_, found := find(goVerList, ver)
 			if found {
-				if err := colorPrint(green, ver); err != nil {
-					log.Fatal(err)
+
+				// get current version
+				getCurVersionCmd := exec.Command("go", "version")
+				b, err := getCurVersionCmd.Output()
+				versionOutput := strings.Split(string(b), " ")
+				curVer := versionOutput[2]
+				if err != nil {
+					log.Fatal("getCurVersionCmd:", err)
 				}
+				fmtV.Println("CurVersion: ", string(curVer))
+
+				// check if system
+				getPathCmd := exec.Command("where", "go.exe")
+				b, err := getPathCmd.Output()
+				if err != nil {
+					log.Fatal("getPathCmd: ", err)
+				}
+				curFilePath := strings.TrimSpace(string(b)) // needed to remove space
+				fmtV.Printf("current version: %sAAA\n", curFilePath)
+
+				if strings.Contains(curFiiePath, goRoot) {
+					curVer = []byte("system")
+				}
+
+				if ver == string(curVer) {
+					if err := colorPrint(Red, ver); err != nil {
+						log.Fatal(err)
+					}
+				} else {
+					if err := colorPrint(Green, ver); err != nil {
+						log.Fatal(err)
+					}
+				}
+
 			} else {
-				verMsg := fmt.Sprintf("%-10v", ver)
+				verMsg := lefAlignString(ver)
 				fmt.Print(verMsg)
 			}
-
-			// fmt.Print(ver, "\t\t")
 		}
 		fmt.Println()
 		count -= printCount

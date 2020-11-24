@@ -14,6 +14,7 @@ import (
 )
 
 func fileExist(filePath string) bool {
+	fmtV.Printf("check file exist: %s\n", filePath)
 	info, err := os.Stat(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -60,7 +61,8 @@ func find(slice []string, val string) (int, bool) {
 }
 
 const (
-	green = "green"
+	Green = "green"
+	Red   = "red"
 
 	checkBox = "\xE2\x9C\x85"
 
@@ -74,12 +76,18 @@ const (
 	colorWhite  = "\033[37m"
 )
 
+func lefAlignString(msg string) string {
+	return fmt.Sprintf("%-20v", msg)
+}
+
 func colorPrint(color string, msg string) error {
+	leftAlignMsg := lefAlignString(msg)
 
 	switch color {
-	case green:
-		leftAlignMsg := fmt.Sprintf("%-10v", msg)
-		fmt.Printf("%s%s%s", string(colorGreen), leftAlignMsg, checkBox)
+	case Red:
+		fmt.Printf("%s%s", string(colorRed), leftAlignMsg)
+	case Green:
+		fmt.Printf("%s%s", string(colorGreen), leftAlignMsg)
 	default:
 		return errors.New("not proper color")
 	}

@@ -107,7 +107,7 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 	}
 	useVersion := "go" + version
 	useExe := useVersion + ".exe"
-	// fmt.Printf("version: %s, exe: %s\n", useVersion, useExe)
+	fmtV.Printf("wanted version: %s, exe: %s\n", useVersion, useExe)
 
 	if !versionExist(useExe) {
 		log.Fatal("%s is not installed version", useExe)
@@ -122,6 +122,7 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 		log.Fatal("getPathCmd: ", err)
 	}
 	curFilePath := strings.TrimSpace(string(b)) // needed to remove space
+	fmtV.Printf("current version: %sAAA\n", curFilePath)
 
 	// if exist then rename it. ex) go.exe -> go1.14.1.exe
 	if fileExist(curFilePath) {
@@ -164,7 +165,7 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 	if err != nil {
 		log.Fatal("getCurVersionCmd2:", err)
 	}
-	fmt.Println(string(v))
+	fmt.Println("changed version: ", string(v))
 }
 
 func use(cmd *cobra.Command, args []string) {
