@@ -140,18 +140,18 @@ func columnPrint(list []string) {
 
 				// check if system
 				getPathCmd := exec.Command("where", "go.exe")
-				b, err := getPathCmd.Output()
+				b, err = getPathCmd.Output()
 				if err != nil {
 					log.Fatal("getPathCmd: ", err)
 				}
 				curFilePath := strings.TrimSpace(string(b)) // needed to remove space
 				fmtV.Printf("current version: %sAAA\n", curFilePath)
 
-				if strings.Contains(curFiiePath, goRoot) {
-					curVer = []byte("system")
+				if strings.Contains(curFilePath, goRoot) {
+					curVer = "system"
 				}
 
-				if ver == string(curVer) {
+				if ver == curVer {
 					if err := colorPrint(Red, ver); err != nil {
 						log.Fatal(err)
 					}
