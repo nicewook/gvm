@@ -53,7 +53,7 @@ func getLocalList() []string {
 			installedVersions = append(installedVersions, name)
 		}
 	}
-	return installedVersions
+	return append(installedVersions, systemGo)
 }
 
 func list(cmd *cobra.Command, args []string) {

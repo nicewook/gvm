@@ -52,8 +52,8 @@ var rootCmd = &cobra.Command{
 	Use:   "gvm",
 	Short: `"gvm" is go language version manager for Windows`,
 	Long: `"gvm" is go language version manager for Windows.
-	You can install/uninstall any version you want to use
-	and choose the version what you want for the time`,
+You can install/uninstall any version you want to use
+and choose the version what you want for the time`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

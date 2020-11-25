@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -123,4 +124,46 @@ func sortGoSDKList(list []string) {
 
 		return vA.LessThan(vB)
 	})
+}
+
+const (
+	getGoExePathCmdStr = "where go.exe"
+	getCurGoVerCmdStr  = "go.exe version"
+)
+
+func getCurGoVersion() string {
+	getCurGoVerCmd := makeExecCmd(getCurGoVerCmdStr)
+	b, err := getCurGoVerCmd.Output()
+	if err != nil {
+		log.Fatal("getCurGoVerCmd: ", err)
+	}
+	versionOutput := strings.Split(string(b), " ")
+	return versionOutput[2]
+}
+
+func getCurGoExePath() (string, bool) {
+	getCurGoExePathCmd := makeExecCmd(getGoExePathCmdStr)
+	b, err := getCurGoExePathCmd.Output()
+	if err != nil {
+		log.Fatal("getCurGoExePathCmd: ", err)
+	}
+	curGoExePath := strings.TrimSpace(string(b)) // needed to remove space
+
+	var isSystemGo bool
+	fmtV.Printf("current go.exe path is %s, GOROOT is %s\n", curGoExePath, goRoot)
+	if strings.Contains(
+		strings.ToLower(curGoExePath),
+		strings.ToLower(goRoot),
+	) {
+		isSystemGo = true
+	}
+	return curGoExePath, isSystemGo
+}
+
+func makeExecCmd(cmdStr string) *exec.Cmd {
+	cmdSlice := strings.Split(cmdStr, " ")
+	if len(cmdSlice) <= 0 {
+		return exec.Command(cmdSlice[0])
+	}
+	return exec.Command(cmdSlice[0], cmdSlice[1:]...)
 }

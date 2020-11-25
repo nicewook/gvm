@@ -53,7 +53,7 @@ func uninstall(cmd *cobra.Command, args []string) {
 		// check if it's used version
 		// then change to use system version
 		if usingVer == v {
-			useVersion("system")
+			useVersion(systemGo)
 		}
 
 		// remove gopath\bin\go<version>.exe

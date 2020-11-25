@@ -18,9 +18,7 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os/exec"
 	"regexp"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/spf13/cobra"
@@ -85,38 +83,29 @@ func getRemoteList() []string {
 	return remoteVersions
 }
 
+// calcPrintCount is nested function for printCount
+func calcPrintCount(restRows, restList int) int {
+	intResult := restList / restRows
+	floatResult := float32(restList) / float32(restRows)
+	if float32(intResult) < floatResult {
+		intResult++
+	}
+	return intResult
+}
+
 func columnPrint(list []string) {
 
-	calcPrintCount := func(restRows, restList int) int {
-		intResult := restList / restRows
-		floatResult := float32(restList) / float32(restRows)
-		if float32(intResult) < floatResult {
-			intResult++
-		}
-		return intResult
+	curVer := getCurGoVersion()
+	_, isSystemGo := getCurGoExePath()
+	if isSystemGo {
+		curVer = systemGo
 	}
 
+	fmtV.Printf("current go version: %s\nis system go? %v\n\n", curVer, isSystemGo)
+	// column print
 	count := len(list)
-
-	if count < 30 {
-		for _, ver := range list {
-			_, found := find(goVerList, ver)
-			if found {
-				if err := colorPrint(Green, ver); err != nil {
-					log.Fatal(err)
-				}
-			} else {
-				verMsg := lefAlignString(ver)
-				fmt.Print(verMsg)
-			}
-			fmt.Println()
-		}
-		return
-	}
-
-	// need column print
-
 	totalRows := 30
+
 	for i := 0; i < totalRows; i++ {
 		// calculate this time rowCount
 		restRows := totalRows - i
@@ -127,30 +116,6 @@ func columnPrint(list []string) {
 
 			_, found := find(goVerList, ver)
 			if found {
-
-				// get current version
-				getCurVersionCmd := exec.Command("go", "version")
-				b, err := getCurVersionCmd.Output()
-				versionOutput := strings.Split(string(b), " ")
-				curVer := versionOutput[2]
-				if err != nil {
-					log.Fatal("getCurVersionCmd:", err)
-				}
-				fmtV.Println("CurVersion: ", string(curVer))
-
-				// check if system
-				getPathCmd := exec.Command("where", "go.exe")
-				b, err = getPathCmd.Output()
-				if err != nil {
-					log.Fatal("getPathCmd: ", err)
-				}
-				curFilePath := strings.TrimSpace(string(b)) // needed to remove space
-				fmtV.Printf("current version: %sAAA\n", curFilePath)
-
-				if strings.Contains(curFilePath, goRoot) {
-					curVer = "system"
-				}
-
 				if ver == curVer {
 					if err := colorPrint(Red, ver); err != nil {
 						log.Fatal(err)
