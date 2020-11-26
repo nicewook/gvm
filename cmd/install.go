@@ -54,7 +54,7 @@ func install(cmd *cobra.Command, args []string) {
 	getCmd.Stdout = os.Stdout
 	getCmd.Stderr = os.Stderr
 
-	downloadCmd := exec.Command(installVersion, "download")
+	downloadCmd := exec.Command(downloadExe, "download")
 	downloadCmd.Stdout = os.Stdout
 	downloadCmd.Stderr = os.Stderr
 
