@@ -170,12 +170,12 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
 func use(cmd *cobra.Command, args []string) {
 	if len(args) <= 0 {
-		getCurVersionCmd := exec.Command("go", "version")
-		v, err := getCurVersionCmd.Output()
-		if err != nil {
-			log.Fatal("getCurVersionCmd:", err)
+		curVer := getCurGoVersion()
+		if _, isSystem := getCurGoExePath(); isSystem {
+			fmt.Printf("Currently using %s, %s\n", systemGo, curVer)
+			return
 		}
-		fmt.Println("Currently using", string(v))
+		fmt.Println("Currently using", curVer)
 		return
 	}
 	useVersion(args[0])
