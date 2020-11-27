@@ -34,6 +34,9 @@ var listCmd = &cobra.Command{
 	Run: list,
 }
 
+// getLocalList is
+// 1) get the list and sort
+// 2) then add systemGo at the end
 func getLocalList() []string {
 	dirPath := filepath.Join(goPath, "bin")
 	files, err := ioutil.ReadDir(dirPath)
@@ -53,18 +56,16 @@ func getLocalList() []string {
 			installedVersions = append(installedVersions, name)
 		}
 	}
+	sortGoSDKList(installedVersions)
 	return append(installedVersions, systemGo)
 }
 
 func list(cmd *cobra.Command, args []string) {
 	fmt.Println("locally installed go SDK list\n--")
 	list := getLocalList()
-	sortGoSDKList(list)
-	list = append(list, systemGo)
 	for _, l := range list {
 		fmt.Println(l)
 	}
-
 }
 
 func init() {
