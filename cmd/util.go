@@ -115,12 +115,18 @@ func sortGoSDKList(list []string) {
 
 	sort.Slice(list, func(i, j int) bool {
 		va := strings.TrimPrefix(list[i], "go")
-		vA, _ := version.NewVersion(va)
+		vA, err1 := version.NewVersion(va)
+		if err1 != nil {
+			fmtV.Println(err1)
+			return false
+		}
 
 		vb := strings.TrimPrefix(list[j], "go")
-		vB, _ := version.NewVersion(vb)
-
-		// fmt.Println("va, vb: ", va, vb)
+		vB, err2 := version.NewVersion(vb)
+		if err2 != nil {
+			fmtV.Println(err2)
+			return false
+		}
 
 		return vA.LessThan(vB)
 	})
