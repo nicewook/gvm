@@ -31,13 +31,15 @@ var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "Download and install your desired go version",
 	Long: `Download and install any go version you want.
-	Just specify the version number without "go" prefix.`,
+Just specify the version number without "go" prefix.
+
+ex) $ gvm install 1.15.5`,
 	Run: install,
 }
 
-func install(cmd *cobra.Command, args []string) {
+func installOneVersion(version string) {
 
-	installVersion := "go" + args[0]
+	installVersion := "go" + version
 	installURL := "golang.org/dl/" + installVersion
 	downloadExe := goPath + "\\bin\\" + installVersion + ".exe"
 	fmt.Println("installVersion: ", installVersion)
@@ -81,6 +83,21 @@ func install(cmd *cobra.Command, args []string) {
 	if err := downloadCmd.Run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func install(cmd *cobra.Command, args []string) {
+
+	// check no argument, the display help for the commnad
+	if len(args) == 0 {
+		cmd.Help()
+		os.Exit(0)
+	}
+
+	// start install
+	for _, ver := range args {
+		installOneVersion(ver)
+	}
+
 }
 
 func init() {
