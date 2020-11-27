@@ -63,8 +63,22 @@ func getLocalList() []string {
 func list(cmd *cobra.Command, args []string) {
 	fmt.Println("locally installed go SDK list\n--")
 	list := getLocalList()
-	for _, l := range list {
-		fmt.Println(l)
+
+	curVer := getCurGoVersion()
+	_, isSystemGo := getCurGoExePath()
+	if isSystemGo {
+		curVer = systemGo
+	}
+
+	for _, ver := range list {
+		if ver == curVer {
+			if err := colorPrint(Red, addStar(ver)); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println()
+		} else {
+			fmt.Println(ver)
+		}
 	}
 }
 

@@ -81,6 +81,10 @@ func lefAlignString(msg string) string {
 	return fmt.Sprintf("%-20v", msg)
 }
 
+func addStar(msg string) string {
+	return msg + " *"
+}
+
 func colorPrint(color string, msg string) error {
 	leftAlignMsg := lefAlignString(msg)
 

@@ -117,7 +117,8 @@ func columnPrint(list []string) {
 			_, found := find(goVerList, ver)
 			if found {
 				if ver == curVer {
-					if err := colorPrint(Red, ver); err != nil {
+
+					if err := colorPrint(Red, addStar(ver)); err != nil {
 						log.Fatal(err)
 					}
 				} else {
@@ -139,20 +140,9 @@ func columnPrint(list []string) {
 
 func listAll(cmd *cobra.Command, args []string) {
 	remoteList := getRemoteList()
-	fmtV.Println("remote go SDK list\n--")
+	fmt.Println("remote go SDK list\n--")
 
 	columnPrint(remoteList)
-
-	// for _, l := range remoteList {
-	// 	_, found := find(goVerList, l)
-	// 	if found {
-	// 		if err := colorPrint(green, l); err != nil {
-	// 			log.Fatal(err)
-	// 		}
-	// 	} else {
-	// 		fmt.Println(l)
-	// 	}
-	// }
 }
 
 func init() {
