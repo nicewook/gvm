@@ -11,7 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/hashicorp/go-version"
+	ver "github.com/hashicorp/go-version"
 )
 
 func fileExist(filePath string) bool {
@@ -100,6 +100,11 @@ func colorPrint(color string, msg string) error {
 	return nil
 }
 
+func colorPrintLeftAlign(color string, msg string) error {
+
+	return colorPrint(color, lefAlignString(msg))
+}
+
 func goroot(version string) (string, error) {
 	home, err := homedir()
 	if err != nil {
@@ -119,14 +124,14 @@ func sortGoSDKList(list []string) {
 
 	sort.Slice(list, func(i, j int) bool {
 		va := strings.TrimPrefix(list[i], "go")
-		vA, err1 := version.NewVersion(va)
+		vA, err1 := ver.NewVersion(va)
 		if err1 != nil {
 			fmtV.Println(err1)
 			return false
 		}
 
 		vb := strings.TrimPrefix(list[j], "go")
-		vB, err2 := version.NewVersion(vb)
+		vB, err2 := ver.NewVersion(vb)
 		if err2 != nil {
 			fmtV.Println(err2)
 			return false

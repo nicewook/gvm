@@ -118,11 +118,11 @@ func columnPrint(list []string) {
 			if found {
 				if ver == curVer {
 
-					if err := colorPrint(Red, addStar(ver)); err != nil {
+					if err := colorPrintLeftAlign(Red, addStar(ver)); err != nil {
 						log.Fatal(err)
 					}
 				} else {
-					if err := colorPrint(Green, ver); err != nil {
+					if err := colorPrintLeftAlign(Green, ver); err != nil {
 						log.Fatal(err)
 					}
 				}

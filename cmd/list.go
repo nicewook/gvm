@@ -72,7 +72,7 @@ func list(cmd *cobra.Command, args []string) {
 
 	for _, ver := range list {
 		if ver == curVer {
-			if err := colorPrint(Red, addStar(ver)); err != nil {
+			if err := colorPrintLeftAlign(Red, addStar(ver)); err != nil {
 				log.Fatal(err)
 			}
 			fmt.Println()
