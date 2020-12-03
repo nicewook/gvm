@@ -158,7 +158,7 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 	fmt.Println("now we can use ", useVersion)
 	// save usingVer
 	usingVer = useVersion // ex) go1.13.2
-	viper.Set(usingVerCfg, usingVer)
+	viper.Set(curUsingVerCfg, usingVer)
 
 	getCurVersionCmd2 := exec.Command("go", "version")
 	v, err := getCurVersionCmd2.Output()

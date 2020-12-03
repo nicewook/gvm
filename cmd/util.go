@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	ver "github.com/hashicorp/go-version"
+	"github.com/spf13/cobra"
 )
 
 func fileExist(filePath string) bool {
@@ -181,4 +182,11 @@ func makeExecCmd(cmdStr string) *exec.Cmd {
 		return exec.Command(cmdSlice[0])
 	}
 	return exec.Command(cmdSlice[0], cmdSlice[1:]...)
+}
+
+func noArgumentDisplayHelp(cmd *cobra.Command, args []string) {
+	if len(args) == 0 {
+		cmd.Help()
+		os.Exit(0)
+	}
 }

@@ -26,17 +26,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// installCmd represents the install command
-var installCmd = &cobra.Command{
-	Use:   "install",
-	Short: "Download and install your desired go version",
-	Long: `Download and install any go version you want.
-Just specify the version number without "go" prefix.
-
-ex) $ gvm install 1.15.5`,
-	Run: install,
-}
-
 func installOneVersion(version string) {
 
 	installVersion := "go" + version
@@ -87,17 +76,22 @@ func installOneVersion(version string) {
 
 func install(cmd *cobra.Command, args []string) {
 
-	// check no argument, the display help for the commnad
-	if len(args) == 0 {
-		cmd.Help()
-		os.Exit(0)
-	}
+	noArgumentDisplayHelp(cmd, args)
 
-	// start install
 	for _, ver := range args {
 		installOneVersion(ver)
 	}
+}
 
+// installCmd represents the install command
+var installCmd = &cobra.Command{
+	Use:   "install",
+	Short: "Download and install your desired go version",
+	Long: `Download and install any go version you want.
+Just specify the version number without "go" prefix.
+
+ex) $ gvm install 1.15.5 // install go v1.15.5`,
+	Run: install,
 }
 
 func init() {

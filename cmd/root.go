@@ -27,8 +27,8 @@ import (
 const (
 	downloadPage = "https://golang.org/dl"
 
-	usingVerCfg = "usingVer"
-	systemGo    = "system"
+	curUsingVerCfg = "usingVer"
+	systemGo       = "system"
 )
 
 var (
