@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -87,13 +88,12 @@ func addStar(msg string) string {
 }
 
 func colorPrint(color string, msg string) error {
-	leftAlignMsg := lefAlignString(msg)
 
 	switch color {
 	case Red:
-		fmt.Printf("%s%s", string(colorRed), leftAlignMsg)
+		fmt.Printf("%s%s", string(colorRed), msg)
 	case Green:
-		fmt.Printf("%s%s", string(colorGreen), leftAlignMsg)
+		fmt.Printf("%s%s", string(colorGreen), msg)
 	default:
 		return errors.New("not proper color")
 	}
@@ -189,4 +189,15 @@ func noArgumentDisplayHelp(cmd *cobra.Command, args []string) {
 		cmd.Help()
 		os.Exit(0)
 	}
+}
+
+// regex for go version
+// https://regex101.com/r/zxxWBl/1
+const semVerRegex string = `go?([0-9]+)(\.[0-9]+)?(\.[0-9]+)?` +
+	`(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?` +
+	`(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?`
+
+func isGoVersionString(version string) bool {
+	re := regexp.MustCompile("^" + semVerRegex + "$")
+	return re.MatchString(version)
 }

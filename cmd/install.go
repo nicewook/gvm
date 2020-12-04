@@ -33,9 +33,22 @@ func installOneVersion(version string) {
 	downloadExe := goPath + "\\bin\\" + installVersion + ".exe"
 
 	// check regex of the version name
+	if isGoVersionString(installVersion) == false {
+		if err := colorPrint(Green, version); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(" is not proper go version format")
+		os.Exit(0)
+	} else {
+		if err := colorPrint(Green, version); err != nil {
+			log.Fatal(err)
+		}
+		fmtV.Println(" is good go version format")
+	}
+	// check the version exist
 	// check if already downloaded
 
-	fmtV.Println("start to install ", installVersion)
+	fmtV.Println("Start to install ", installVersion)
 	fmtV.Println("URL to download: ", installURL)
 	fmtV.Println(downloadExe, " will download SDK.\nif already downloaded, it will execute downloaded go SDK version")
 
