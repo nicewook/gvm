@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -44,15 +43,12 @@ func getLocalList() []string {
 		log.Fatal("ReadDir: ", err, dirPath)
 	}
 
-	// https://regex101.com/r/zxxWBl/3
-	var re = regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}.exe`)
 	var installedVersions []string
 	// https://regex101.com/r/zxxWBl/1
 	for _, file := range files {
 		name := file.Name()
-		if re.MatchString(name) {
-			name = strings.TrimRight(name, ".exe")
-			// fmt.Println(name)
+		name = strings.TrimRight(name, ".exe")
+		if isGoVersionString(name) {
 			installedVersions = append(installedVersions, name)
 		}
 	}

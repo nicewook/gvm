@@ -22,7 +22,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -70,16 +69,16 @@ func useSystemGo() {
 	}
 	fmt.Println("files: ", fNames)
 
-	re := regexp.MustCompile(`(?m)go\d{0,2}.\d{0,2}.{0,1}\d{0,2}`)
 	for _, v := range fNames {
-		if v == "go.exe" {
+		v = strings.TrimRight(v, ".exe")
+		if v == "go" {
 			fmt.Println("you already use system Go SDK")
 			return
-		} else if re.MatchString(v) {
+		} else if isGoVersionString(v) {
 			fmt.Println("trying to use system Go SDK")
 			// rename
 			fmt.Println("v: ", v)
-			curGoExe := filepath.Join(systemGoPath, v)
+			curGoExe := filepath.Join(systemGoPath, v+".exe")
 			goExe := filepath.Join(systemGoPath, "go.exe")
 			if err := os.Rename(curGoExe, goExe); err != nil {
 				log.Fatal(err)
