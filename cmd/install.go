@@ -26,6 +26,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func alreadyInstalled(gover string) bool {
+
+	if gover == getSystemGoVer() {
+		gover = systemGo
+	}
+
+	_, found := find(goVerList, gover)
+	if found {
+		return true
+	}
+	return false
+}
+
+func canInstall(gover string) bool {
+	for _, ver := range getRemoteList() {
+		if gover == ver {
+			return true
+		}
+	}
+	return false
+}
+
 func installOneVersion(version string) {
 
 	installVersion := "go" + version
@@ -34,19 +56,20 @@ func installOneVersion(version string) {
 
 	// check regex of the version name
 	if isGoVersionString(installVersion) == false {
-		if err := colorPrint(Green, version); err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(" is not proper go version format")
+		fmt.Printf("%s is not proper go version format", makeColorString(Green, version))
 		os.Exit(0)
 	} else {
-		if err := colorPrint(Green, version); err != nil {
-			log.Fatal(err)
-		}
-		fmtV.Println(" is good go version format")
+		fmtV.Printf("%s is good go version format", makeColorString(Green, version))
 	}
-	// check the version exist
-	// check if already downloaded
+	// check the version exist or already downloaded
+	if alreadyInstalled(installVersion) {
+		fmt.Printf("%s is already installed", makeColorString(Red, installVersion))
+		os.Exit(0)
+	}
+	if canInstall(installVersion) == false {
+		fmt.Printf("%s is not existing version. It cannot be installed", makeColorString(Red, installVersion))
+		os.Exit(0)
+	}
 
 	fmtV.Println("Start to install ", installVersion)
 	fmtV.Println("URL to download: ", installURL)

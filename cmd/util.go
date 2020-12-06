@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -101,6 +102,18 @@ func colorPrint(color string, msg string) error {
 	return nil
 }
 
+func makeColorString(color string, msg string) string {
+
+	switch color {
+	case Red:
+		return fmt.Sprintf("%s%s%s", colorRed, msg, colorReset)
+	case Green:
+		return fmt.Sprintf("%s%s%s", colorGreen, msg, colorReset)
+	default:
+		return msg
+	}
+}
+
 func colorPrintLeftAlign(color string, msg string) error {
 
 	return colorPrint(color, lefAlignString(msg))
@@ -157,6 +170,36 @@ func getCurGoVersion() string {
 	return versionOutput[2]
 }
 
+func getSystemGoExeName() string {
+	dirPath := filepath.Join(goRoot, "bin")
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		log.Fatal("ReadDir: ", err, dirPath)
+	}
+	for _, file := range files {
+		name := file.Name()
+		if name == "go.exe" {
+			return "go.exe"
+		}
+		name = strings.TrimRight(name, ".exe")
+		if isGoVersionString(name) {
+			return name + ".exe"
+		}
+	}
+	log.Fatal("no system go execution file found")
+	return ""
+}
+
+func getSystemGoVer() string {
+	getSystemGoVerCmd := makeExecCmd(fmt.Sprintf("%s version", getSystemGoExeName()))
+	b, err := getSystemGoVerCmd.Output()
+	if err != nil {
+		log.Fatal("getCurGoVerCmd: ", err)
+	}
+	versionOutput := strings.Split(string(b), " ")
+	return versionOutput[2]
+}
+
 func getCurGoExePath() (string, bool) {
 	getCurGoExePathCmd := makeExecCmd(getGoExePathCmdStr)
 	b, err := getCurGoExePathCmd.Output()
@@ -192,7 +235,6 @@ func noArgumentDisplayHelp(cmd *cobra.Command, args []string) {
 }
 
 // regex for go version
-// https://regex101.com/r/zxxWBl/1
 const semVerRegex string = `go?([0-9]+)(\.[0-9]+)?(\.[0-9]+)?` +
 	`(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?` +
 	`(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?`
