@@ -109,15 +109,7 @@ func colorPrint(color string, msg string) error {
 }
 
 func makeColorString(color string, msg string) string {
-
-	switch color {
-	case Red:
-		return fmt.Sprintf("%s%s%s", colorRed, msg, colorReset)
-	case Green:
-		return fmt.Sprintf("%s%s%s", colorGreen, msg, colorReset)
-	default:
-		return msg
-	}
+	return fmt.Sprintf("%s%s%s", color, msg, colorReset)
 }
 
 func colorPrintLeftAlign(color string, msg string) error {
@@ -215,7 +207,7 @@ func getCurGoExePath() (string, bool) {
 	curGoExePath := strings.TrimSpace(string(b)) // needed to remove space
 
 	var isSystemGo bool
-	fmtV.Printf("current go.exe path is %s, GOROOT is %s\n", curGoExePath, goRoot)
+	fmtV.Printf("currently using %s\n", curGoExePath)
 	if strings.Contains(
 		strings.ToLower(curGoExePath),
 		strings.ToLower(goRoot),

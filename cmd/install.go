@@ -56,18 +56,18 @@ func installOneVersion(version string) {
 
 	// check regex of the version name
 	if isGoVersionString(installVersion) == false {
-		fmt.Printf("%s is not proper go version format\n", makeColorString(Green, version))
+		fmt.Printf("%s is not proper go version format\n", makeColorString(colorGreen, version))
 		os.Exit(0)
 	} else {
-		fmtV.Printf("%s is good go version format\n", makeColorString(Green, version))
+		fmtV.Printf("%s is good go version format\n", makeColorString(colorGreen, version))
 	}
 	// check the version exist or already downloaded
 	if alreadyInstalled(installVersion) {
-		fmt.Printf("%s is already installed", makeColorString(Red, installVersion))
+		fmt.Printf("%s is already installed", makeColorString(colorRed, installVersion))
 		os.Exit(0)
 	}
 	if canInstall(installVersion) == false {
-		fmt.Printf("%s is not existing version\n", makeColorString(Red, installVersion))
+		fmt.Printf("%s is not existing version\n", makeColorString(colorRed, installVersion))
 		os.Exit(0)
 	}
 
@@ -136,7 +136,12 @@ var installCmd = &cobra.Command{
 	Long: `Download and install any go version you want.
 Just specify the version number without "go" prefix.
 
-ex) $ gvm install 1.15.5 // install go v1.15.5`,
+ex) $ gvm install 1.15.5 // install go v1.15.5
+
+In detail, 
+First, It installs go<version>.exe to "GOPATH\bin"
+Second, It execute go<version>.exe, which will install SDK for the version. 
+After then, when we execute go<version>.exe, it will run the installed go version`,
 	Run: install,
 }
 

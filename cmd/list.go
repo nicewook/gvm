@@ -25,14 +25,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: `List the locally installed go SDK versions`,
-	// Long:  `List the locally installed go SDK versions`,
-	Run: list,
-}
-
 // getLocalList is
 // 1) get the list and sort
 // 2) then add systemGo at the end
@@ -57,8 +49,6 @@ func getLocalList() []string {
 }
 
 func list(cmd *cobra.Command, args []string) {
-	fmt.Println("locally installed go SDK list\n--")
-	list := getLocalList()
 
 	curVer := getCurGoVersion()
 	_, isSystemGo := getCurGoExePath()
@@ -66,16 +56,24 @@ func list(cmd *cobra.Command, args []string) {
 		curVer = systemGo
 	}
 
+	fmt.Println("locally installed go SDKs list\n--")
+	list := getLocalList()
+
 	for _, ver := range list {
 		if ver == curVer {
-			if err := colorPrintLeftAlign(Red, addStar(ver)); err != nil {
-				log.Fatal(err)
-			}
-			fmt.Println()
+			fmt.Printf("%s %s\n", makeColorString(colorRed, ver), makeColorString(colorYellow, "*"))
 		} else {
 			fmt.Println(ver)
 		}
 	}
+}
+
+// listCmd represents the list command
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: `List the locally installed go SDK versions`,
+	// Long:  `List the locally installed go SDK versions`,
+	Run: list,
 }
 
 func init() {
