@@ -67,13 +67,13 @@ func installOneVersion(version string) {
 		os.Exit(0)
 	}
 	if canInstall(installVersion) == false {
-		fmt.Printf("%s is not existing version. It cannot be installed", makeColorString(Red, installVersion))
+		fmt.Printf("%s is not existing version\n", makeColorString(Red, installVersion))
 		os.Exit(0)
 	}
 
-	fmtV.Printf("Start to install %s\n", installVersion)
-	fmtV.Println("URL to download: ", installURL)
-	fmtV.Println(downloadExe, " will download SDK.\nif already downloaded, it will execute downloaded go SDK version")
+	fmtV.Printf("start to install %s\n--\n", installVersion)
+	fmtV.Printf("URL to download: %s\n", installURL)
+	fmtV.Printf("download and execute %s\nfirst execution, it will downloaded go SDK, after then it will execute downloaded go SDK version\n--\n", downloadExe)
 
 	// command wants to run
 	// refer to: https://www.ardanlabs.com/blog/2020/04/modules-06-vendoring.html
@@ -101,7 +101,7 @@ func installOneVersion(version string) {
 			elapsedSecond = 0
 		)
 		for !fileExist(downloadExe) {
-			fmtV.Printf("not yet downloaded %s.exe file for download go SDK\n", installVersion)
+			fmtV.Printf("not yet installed %s.exe file for download go SDK\n", installVersion)
 			time.Sleep(1000 * time.Millisecond)
 
 			elapsedSecond++
@@ -109,12 +109,12 @@ func installOneVersion(version string) {
 				log.Fatalf("Download file timeout. %d seconds", timeoutSecond)
 			}
 		}
-		fmtV.Printf("%s.exe downloaded\n", installVersion)
+		fmtV.Printf("%s.exe installed successfully\n", installVersion)
 		wg.Done()
 	}()
 	wg.Wait()
 
-	fmt.Println("Start Downloading")
+	fmt.Printf("start downloading go SDK by executing %s.exe\n", installVersion)
 	if err := downloadCmd.Run(); err != nil {
 		log.Fatal(err)
 	}

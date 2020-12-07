@@ -18,15 +18,21 @@ import (
 )
 
 func fileExist(filePath string) bool {
-	fmtV.Printf("check file exist: %s\n", filePath)
+	var result bool
+
+	fmtV.Printf("check %s exists: ", filePath)
 	info, err := os.Stat(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return false
+			result = false
+			fmtV.Println(result)
+			return result
 		}
 		log.Fatal("os.Stat: ", err)
 	}
-	return !info.IsDir()
+	result = !info.IsDir()
+	fmtV.Println(result)
+	return result
 }
 
 func copyFile(src, des string) {

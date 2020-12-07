@@ -114,8 +114,8 @@ func initConfig() {
 	// JHS custom config
 	goRoot = os.Getenv("GOROOT")
 	goPath = os.Getenv("GOPATH")
-	fmtV.Println("GOROOT:", goRoot)
-	fmtV.Println("GOPATH:", goPath)
+	fmtV.Printf("GOROOT: %s\n", goRoot)
+	fmtV.Printf("GOPATH: %s\n--\n", goPath)
 
 	// init go version list installed in local
 	goVerList = getLocalList()

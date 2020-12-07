@@ -65,7 +65,7 @@ func getRemoteList() []string {
 		data = append(data, ver)
 		count++
 	})
-	fmtV.Println("total SDK count:", count)
+	fmtV.Printf("total %d SDKs available\n", count)
 
 	for _, ver := range data {
 		if isGoVersionString(ver) {
