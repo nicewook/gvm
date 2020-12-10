@@ -37,15 +37,17 @@ $ go get -u github.com/nicewook/gvm
 ```
 $ gvm version 
 ```
+![gvm version command](./gif/gvm-version.gif)
+
 
 ### list
 
 `list` command shows the installed go SDK(s), and `system` means originally installed go.
 
-
 ```
 $ gvm list 
 ```
+![gvm list command](./gif/gvm-list.gif)
 
 ### listall
 
@@ -63,6 +65,8 @@ $ gvm listall
 ```
 $ gvm install 1.13.1 1.13.2
 ```
+
+![gvm install command](./gif/gvm-install.gif)
 
 ### uninstall
 
