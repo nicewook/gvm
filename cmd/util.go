@@ -241,3 +241,12 @@ func isGoVersionString(version string) bool {
 	re := regexp.MustCompile("^" + semVerRegex + "$")
 	return re.MatchString(version)
 }
+
+func isInstalledVersion(version string) bool {
+	for _, installedVer := range getLocalList() {
+		if installedVer == version {
+			return true
+		}
+	}
+	return false
+}

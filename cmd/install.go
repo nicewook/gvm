@@ -141,7 +141,7 @@ ex) $ gvm install 1.15.5 // install go v1.15.5
 In detail, 
 First, It installs go<version>.exe to "GOPATH\bin"
 Second, It execute go<version>.exe, which will install SDK for the version. 
-After then, when we execute go<version>.exe, it will run the installed go version`,
+After then, when we execute go<version>.exe, it will run the installed go version.`,
 	Run: install,
 }
 

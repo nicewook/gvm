@@ -72,7 +72,8 @@ func list(cmd *cobra.Command, args []string) {
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: `List the locally installed go SDK versions`,
-	// Long:  `List the locally installed go SDK versions`,
+	Long: `List the locally installed go SDK versions.
+It shows the currently using version as red with the asterisk.`,
 	Run: list,
 }
 

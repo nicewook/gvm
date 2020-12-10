@@ -26,13 +26,10 @@ import (
 // listallCmd represents the listall command
 var listallCmd = &cobra.Command{
 	Use:   "listall",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "List all the version you can use.",
+	Long: `List all the version you can use.
+It shows locally installed version as green, and currently using version as red.
+system means the go version of the your system, not installed by gvm.`,
 	Args: cobra.MaximumNArgs(1),
 	Run:  listAll,
 }

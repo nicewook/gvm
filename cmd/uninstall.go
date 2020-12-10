@@ -24,35 +24,42 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// uninstallCmd represents the uninstall command
-var uninstallCmd = &cobra.Command{
-	Use:   "uninstall",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MinimumNArgs(1),
-	Run:  uninstall,
-}
-
 // see how download works https://go.googlesource.com/dl/+/refs/heads/master/internal/version/version.go
 // git repo: git clone https://go.googlesource.com/dl
 func uninstall(cmd *cobra.Command, args []string) {
-	fmt.Println("args: ", args)
-	uninstallVers := args
-	_ = uninstallVers
 
-	fmt.Println("uninstall called to uninstall: ", uninstallVers)
+	// version format check
+	var validVersions []string
+	for _, ver := range args {
+		if isGoVersionString("go" + ver) {
+			validVersions = append(validVersions, "go"+ver)
+		} else if ver == systemGo {
+			fmt.Printf("gvm will not uninstall %s go version\n", makeColorString(colorGreen, systemGo))
+		} else {
+			fmt.Printf("%s is not proper go version format\n", makeColorString(colorGreen, ver))
+		}
+	}
 
-	for _, v := range uninstallVers {
-		ver := "go" + v
+	// check if installed version
+	var uninstallVersions []string
+	for _, ver := range validVersions {
+		if isInstalledVersion(ver) {
+			fmtV.Printf("%s is installed version. so, it will be removed\n", makeColorString(colorGreen, ver))
+			uninstallVersions = append(uninstallVersions, ver)
+		} else {
+			fmt.Printf("%s is not installed version\n", makeColorString(colorGreen, ver))
+		}
+	}
+
+	fmt.Printf("--\nStart to remove versions: %v\n", uninstallVersions)
+
+	for _, ver := range uninstallVersions {
+		fmt.Printf("--\nStart to remove: %v\n", ver)
+
 		verExe := ver + ".exe"
 		// check if it's used version
 		// then change to use system version
-		if usingVer == v {
+		if usingVer == ver {
 			useVersion(systemGo)
 		}
 
@@ -61,7 +68,7 @@ func uninstall(cmd *cobra.Command, args []string) {
 		if err := os.Remove(filePath); err != nil {
 			log.Println(err)
 		} else {
-			fmt.Println(filePath, " is removed")
+			fmt.Printf("%s is removed\n", filePath)
 		}
 
 		// find home\sdk\<goversion> folder and remove ex) C:\Users\hsjeong\sdk\go1.13.3
@@ -72,11 +79,24 @@ func uninstall(cmd *cobra.Command, args []string) {
 
 		// remove folder of the home\sdk\<version folder>
 		if err := os.RemoveAll(sdkPath); err != nil {
-			log.Printf("fail to remove sdk path: %v\n", err)
+			fmt.Printf("fail to remove sdk at %s: %v\n", sdkPath, err)
 		} else {
-			fmt.Println(sdkPath, " folder is removed or no such folder exist")
+			fmt.Printf("%s folder is removed or no such folder exist\n", sdkPath)
 		}
 	}
+}
+
+// uninstallCmd represents the uninstall command
+var uninstallCmd = &cobra.Command{
+	Use:   "uninstall",
+	Short: "Uninstall installed go SDK(s)",
+	Long: `Uninstall installed go SDK(s)
+You can uninstall one or more versions at once
+
+ex) $ gvm uninstall 1.13.1 1.13.2
+	`,
+	Args: cobra.MinimumNArgs(1),
+	Run:  uninstall,
 }
 
 func init() {
