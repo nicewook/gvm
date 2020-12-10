@@ -8,7 +8,6 @@
 ![GitHub forks](https://img.shields.io/github/forks/nicewook/gvm?style=social)
 
 Project name is a `gvm` that allows `Go developers who are using Windows` to use multiple go version easily.
-
 There is already `gvm`(https://github.com/moovweb/gvm) for Linux and MacOS, but I couldn't find
 well working `gvm` for Windows OS, so the project started.
 
@@ -20,24 +19,76 @@ To install `gvm` on Windows, follow these steps:
 $ go get -u github.com/nicewook/gvm
 ```
 
-## Using `gvm`
-
-### Features
+## Features
 
 - version
-- list/listall
-- install/uninstall
+- list
+- listall
+- install
+- uninstall
 - use
+  
 
-#### version
+## Using `gvm` commands
 
-#### list/listall
+### version
 
+`version` command shows the gvm version.
+```
+$ gvm version 
 ```
 
-#### install/uninstall
+### list
 
-#### use
+`list` command shows the installed go SDK(s), and `system` means originally installed go.
+
+
+```
+$ gvm list 
+```
+
+### listall
+
+`listall` command shows the installed go SDK(s), and `system` means originally installed go.
+```
+$ gvm listall 
+```
+
+### install
+
+`install` command installs go SDK(s)
+- It checks if the version(s) already installed, or not existing version to install.
+- It can install multiple versions at once.
+
+```
+$ gvm install 1.13.1 1.13.2
+```
+
+### uninstall
+
+`uninstall` command uninstalls go SDK(s).
+- It checks if the version(s) is/are not existing.
+- It can uninstall multiple versions at once.
+
+```
+$ gvm uninstall 1.13.1 1.13.2
+```
+
+### use
+
+`use` command changes using go SDK versions to desired.
+- If no version specified, it shows the current using version of the go SDK
+- If checks if the version is not installed.
+- If you name the version as `system`, it will changes to the originally installed go version.
+
+
+```
+$ gvm use
+
+$ gvm use system
+
+$ gvm use 1.13.2
+```
 
 ## Contact
 
