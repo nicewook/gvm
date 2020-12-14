@@ -28,6 +28,8 @@ import (
 // git repo: git clone https://go.googlesource.com/dl
 func uninstall(cmd *cobra.Command, args []string) {
 
+	noArgumentDisplayHelp(cmd, args)
+
 	// version format check
 	var validVersions []string
 	for _, ver := range args {
@@ -99,8 +101,8 @@ var uninstallCmd = &cobra.Command{
 You can uninstall one or more versions at once
 
 ex) $ gvm uninstall 1.13.1 1.13.2`,
-	Args: cobra.MinimumNArgs(1),
-	Run:  uninstall,
+	// Args: cobra.MinimumNArgs(1),
+	Run: uninstall,
 }
 
 func init() {
