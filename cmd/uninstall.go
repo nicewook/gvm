@@ -40,6 +40,10 @@ func uninstall(cmd *cobra.Command, args []string) {
 		}
 	}
 
+	if len(validVersions) == 0 {
+		return
+	}
+
 	// check if installed version
 	var uninstallVersions []string
 	for _, ver := range validVersions {
@@ -51,6 +55,7 @@ func uninstall(cmd *cobra.Command, args []string) {
 		}
 	}
 
+	// Start uninstall
 	fmt.Printf("--\nStart to remove versions: %v\n", uninstallVersions)
 
 	for _, ver := range uninstallVersions {
@@ -68,7 +73,7 @@ func uninstall(cmd *cobra.Command, args []string) {
 		if err := os.Remove(filePath); err != nil {
 			log.Println(err)
 		} else {
-			fmt.Printf("%s is removed\n", filePath)
+			fmt.Printf("Execution file: %s is removed\n", filePath)
 		}
 
 		// find home\sdk\<goversion> folder and remove ex) C:\Users\hsjeong\sdk\go1.13.3
@@ -81,7 +86,7 @@ func uninstall(cmd *cobra.Command, args []string) {
 		if err := os.RemoveAll(sdkPath); err != nil {
 			fmt.Printf("fail to remove sdk at %s: %v\n", sdkPath, err)
 		} else {
-			fmt.Printf("%s folder is removed or no such folder exist\n", sdkPath)
+			fmt.Printf("SDK: %s folder is removed or no such folder exist\n", sdkPath)
 		}
 	}
 }
@@ -93,8 +98,7 @@ var uninstallCmd = &cobra.Command{
 	Long: `Uninstall installed go SDK(s)
 You can uninstall one or more versions at once
 
-ex) $ gvm uninstall 1.13.1 1.13.2
-	`,
+ex) $ gvm uninstall 1.13.1 1.13.2`,
 	Args: cobra.MinimumNArgs(1),
 	Run:  uninstall,
 }
