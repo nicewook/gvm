@@ -39,7 +39,7 @@ func alreadyInstalled(gover string) bool {
 	return false
 }
 
-func canInstall(gover string) bool {
+func isExistRemote(gover string) bool {
 	for _, ver := range getRemoteList() {
 		if gover == ver {
 			return true
@@ -56,7 +56,7 @@ func installOneVersion(version string) {
 
 	// check regex of the version name
 	if isGoVersionString(installVersion) == false {
-		fmt.Printf("%s is not proper go version format\n", makeColorString(colorGreen, version))
+		fmt.Printf("%s is not proper go version format\n", makeColorString(colorRed, version))
 		os.Exit(0)
 	} else {
 		fmtV.Printf("%s is good go version format\n", makeColorString(colorGreen, version))
@@ -66,7 +66,7 @@ func installOneVersion(version string) {
 		fmt.Printf("%s is already installed", makeColorString(colorRed, installVersion))
 		os.Exit(0)
 	}
-	if canInstall(installVersion) == false {
+	if isExistRemote(installVersion) == false {
 		fmt.Printf("%s is not existing version\n", makeColorString(colorRed, installVersion))
 		os.Exit(0)
 	}

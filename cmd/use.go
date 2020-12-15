@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // useCmd represents the use command
@@ -37,12 +36,6 @@ var useCmd = &cobra.Command{
 ex) $ gvm use 1.13.2`,
 	Args: cobra.MaximumNArgs(1),
 	Run:  use,
-}
-
-func versionExist(file string) bool {
-	filePath := filepath.Join(goPath, "bin", file)
-	fmt.Println("want to use version of: ", filePath)
-	return fileExist(filePath)
 }
 
 func useSystemGo() {
@@ -94,6 +87,32 @@ func useSystemGo() {
 	log.Fatal("no Go SDK in GOROOT")
 }
 
+// func getCurGoExePath() string {
+// 	getGoExePathCmd := exec.Command("where", "go.exe")
+
+// 	b, err := getGoExePathCmd.Output()
+// 	if err != nil {
+// 		log.Fatalf("getGoExePathCmd: %v", err)
+// 	}
+// 	curGoExePath := strings.TrimSpace(string(b)) // needed to remove space
+// 	fmtV.Printf("current version: %s\n", curGoExePath)
+// 	return curGoExePath
+// }
+
+func getCurGoExeVersion() string {
+	getCurVersionCmd := exec.Command("go", "version")
+
+	b, err := getCurVersionCmd.Output()
+	if err != nil {
+		log.Fatalf("getCurVersionCmd: %v", err)
+	}
+
+	versionOutput := strings.Split(string(b), " ")
+	curVersionExe := versionOutput[2] + ".exe"
+	fmtV.Printf("current go.exe version: %v\n", curVersionExe)
+	return curVersionExe
+}
+
 func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
 	if version == systemGo {
@@ -101,77 +120,57 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 		useSystemGo()
 		return
 	}
+
 	useVersion := "go" + version
 	useExe := useVersion + ".exe"
+
+	// check regex of the version name
+	if isGoVersionString(useVersion) == false {
+		fmt.Printf("%s is not proper go version format\n", makeColorString(colorRed, version))
+		os.Exit(0)
+	} else {
+		fmtV.Printf("%s is good go version format\n", makeColorString(colorGreen, version))
+	}
+	// check the version exist or already downloaded
+	if alreadyInstalled(useVersion) == false {
+		fmt.Printf("%s is not installed version", makeColorString(colorRed, version))
+		os.Exit(0)
+	}
+
 	fmtV.Printf("wanted version: %s, exe: %s\n", useVersion, useExe)
 
-	if !versionExist(useExe) {
-		log.Fatal("%s is not installed version", useExe)
+	// check current go.exe exist - we will remove it
+	curGoExePath, _ := getCurGoExePath()
+	if fileExist(curGoExePath) == false {
+		fmt.Println("cannot find currently using go.exe file")
+		os.Exit(0)
+		return
 	}
 
-	// get current go.exe info
-	getPathCmd := exec.Command("where", "go.exe")
-	getCurVersionCmd := exec.Command("go", "version")
-
-	b, err := getPathCmd.Output()
-	if err != nil {
-		log.Fatal("getPathCmd: ", err)
-	}
-	curFilePath := strings.TrimSpace(string(b)) // needed to remove space
-	fmtV.Printf("current version: %sAAA\n", curFilePath)
-
-	// if exist then rename it. ex) go.exe -> go1.14.1.exe
-	if fileExist(curFilePath) {
-		// then we need file to rename
-		b, err := getCurVersionCmd.Output()
-		if err != nil {
-			log.Fatal(err)
-		}
-		versionOutput := strings.Split(string(b), " ")
-		curVersionExe := versionOutput[2] + ".exe"
-		fmt.Println("curVersionExe: ", curVersionExe)
-
-		// rename
-		dir := filepath.Dir(curFilePath)
-		newFilePath := filepath.Join(dir, curVersionExe)
-		if err := os.Rename(curFilePath, newFilePath); err != nil {
-			log.Fatal("os.Rename: ", err)
-		}
-		if fileExist(newFilePath) {
-			fmt.Println("rename succeeded")
-		}
-
-		// temp code for restore
-		// if err := os.Rename(newFilePath, curFilePath); err != nil {
-		// 	log.Fatal("os.Rename: ", err)
-		// }
-	}
-
+	// check check the version to use
 	// then copy the go<required-version>.exe to go.exe
-	filePath := filepath.Join(goPath, "bin", useExe)
-	copyFile(filePath, renameToGo(filePath))
-
-	fmt.Println("now we can use ", useVersion)
-	// save usingVer
-	usingVer = useVersion // ex) go1.13.2
-	viper.Set(curUsingVerCfg, usingVer)
-
-	getCurVersionCmd2 := exec.Command("go", "version")
-	v, err := getCurVersionCmd2.Output()
-	if err != nil {
-		log.Fatal("getCurVersionCmd2:", err)
+	useExeFullPath := filepath.Join(goPath, "bin", useExe)
+	if fileExist(useExeFullPath) == false {
+		fmt.Printf("cannot find go version that we want to use: %v\n", useExeFullPath)
+		os.Exit(0)
+		return
 	}
-	fmt.Println("changed version: ", string(v))
+
+	// so we are ready to change go version
+	copyFile(useExeFullPath, renameToGo(useExeFullPath))
+	removeFile(curGoExePath)
+
+	fmt.Printf("now we are using %s ", getCurGoExeVersion())
 }
 
 func use(cmd *cobra.Command, args []string) {
 	if len(args) <= 0 {
 		curVer := getCurGoVersion()
 		if _, isSystem := getCurGoExePath(); isSystem {
-			fmt.Printf("Currently using %s, %s\n", systemGo, curVer)
+			fmt.Printf("Currently using %s, %s\n", makeColorString(colorGreen, systemGo), makeColorString(colorGreen, curVer))
 			return
 		}
-		fmt.Println("Currently using", curVer)
+		fmt.Printf("Currently using %s\n", makeColorString(colorGreen, curVer))
 		return
 	}
 	useVersion(args[0])

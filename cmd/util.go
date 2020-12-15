@@ -36,7 +36,7 @@ func fileExist(filePath string) bool {
 }
 
 func copyFile(src, des string) {
-	fmt.Printf("copy from %s to %s\n", src, des)
+	fmtV.Printf("copy from %s to %s\n", src, des)
 	from, err := os.Open(src)
 	if err != nil {
 		log.Fatal(err)
@@ -51,6 +51,13 @@ func copyFile(src, des string) {
 
 	_, err = io.Copy(to, from)
 	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func removeFile(curGoExePath string) {
+	fmtV.Printf("remove %s\n", curGoExePath)
+	if err := os.Remove(curGoExePath); err != nil {
 		log.Fatal(err)
 	}
 }
