@@ -41,14 +41,6 @@ ex) $ gvm use 1.13.2`,
 func useSystemGo() {
 
 	systemGoPath := filepath.Join(goRoot, "bin")
-	// if err := filepath.Walk(systemGoPath, func(path string, info os.FileInfo, err error) error {
-	// 	files = append(files, path)
-	// 	return nil
-	// }); err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	//
 	files, err := ioutil.ReadDir(systemGoPath)
 	if err != nil {
 		log.Fatal(err)
@@ -57,30 +49,29 @@ func useSystemGo() {
 	for _, f := range files {
 		fNames = append(fNames, f.Name())
 	}
-	fmt.Println("files: ", fNames)
 
-	for _, v := range fNames {
-		v = strings.TrimRight(v, ".exe")
-		if v == "go" {
-			fmt.Println("you already use system Go SDK")
-			return
-		} else if isGoVersionString(v) {
-			fmt.Println("trying to use system Go SDK")
-			// rename
-			fmt.Println("v: ", v)
-			curGoExe := filepath.Join(systemGoPath, v+".exe")
+	for _, fn := range fNames {
+		ver := strings.TrimRight(fn, ".exe")
+		fmt.Println(ver)
+		if isGoVersionString(ver) {
+			fmtV.Printf("trying to use system Go SDK: %s\n", ver)
+
+			// check if currently using system go
+			curGoExePath, isSystemGo := getCurGoExePath()
+			if isSystemGo {
+				fmt.Printf("already using system Go. %s\n", makeColorString(colorGreen, curGoExePath))
+				return
+			}
+
+			// if not system go, copy to go<version>.exe and remove current using go.exe
+			curGoExeVersion := getCurGoExeVersion()
+			copyFile(curGoExePath, curGoExeVersion)
+			removeFile(curGoExePath)
+
+			// copy
+			curGoExe := filepath.Join(systemGoPath, ver+".exe")
 			goExe := filepath.Join(systemGoPath, "go.exe")
-			if err := os.Rename(curGoExe, goExe); err != nil {
-				log.Fatal(err)
-			}
-
-			// remove gopath go.exe
-			if err := os.Remove(filepath.Join(goPath, "bin", "go.exe")); err != nil {
-				fmt.Println("fail to remove go.exe in GOPATH: ", err)
-			} else {
-				fmt.Println("go.exe in GOPATH removed")
-				fmt.Println("now using system Go SDK")
-			}
+			copyFile(curGoExe, goExe)
 			return
 		}
 	}
@@ -157,8 +148,11 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 	}
 
 	// so we are ready to change go version
-	copyFile(useExeFullPath, renameToGo(useExeFullPath))
+	curGoExeVersion := getCurGoExeVersion()
+	copyFile(curGoExePath, curGoExeVersion)
 	removeFile(curGoExePath)
+
+	copyFile(useExeFullPath, renameToGo(useExeFullPath))
 
 	fmt.Printf("now we are using %s ", getCurGoExeVersion())
 }

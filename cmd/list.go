@@ -40,7 +40,7 @@ func getLocalList() []string {
 	for _, file := range files {
 		name := file.Name()
 		name = strings.TrimRight(name, ".exe")
-		if isGoVersionString(name) {
+		if isGoVersionString(name) && name != "go" {
 			installedVersions = append(installedVersions, name)
 		}
 	}

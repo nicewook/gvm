@@ -240,12 +240,13 @@ func noArgumentDisplayHelp(cmd *cobra.Command, args []string) {
 }
 
 // regex for go version
-const semVerRegex string = `go?([0-9]+)(\.[0-9]+)?(\.[0-9]+)?` +
-	`(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?` +
-	`(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?`
+const semVerRegex string = `^go([0-9]+)?(\.[0-9]+)?(\.[0-9]+)?$`
+
+// const semVerRegex string = `^go([0-9]+)?(\.[0-9]+)?(\.[0-9]+)?(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?$`
+// const semVerRegex string = `^go?([0-9]+)(\.[0-9]+)?(\.[0-9]+)?(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?$`
 
 func isGoVersionString(version string) bool {
-	re := regexp.MustCompile("^" + semVerRegex + "$")
+	re := regexp.MustCompile(semVerRegex)
 	return re.MatchString(version)
 }
 
