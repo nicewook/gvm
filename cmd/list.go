@@ -56,7 +56,7 @@ func list(cmd *cobra.Command, args []string) {
 		curVer = systemGo
 	}
 
-	fmt.Println("locally installed go SDKs list\n--")
+	fmt.Println("locally installed Go SDK(s) list\n--")
 	list := getLocalList()
 
 	for _, ver := range list {
@@ -71,8 +71,8 @@ func list(cmd *cobra.Command, args []string) {
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: `List the locally installed go SDK versions`,
-	Long: `List the locally installed go SDK versions.
+	Short: `List the locally installed Go SDK versions`,
+	Long: `List the locally installed Go SDK versions.
 It shows the currently using version as red with the asterisk.`,
 	Run: list,
 }

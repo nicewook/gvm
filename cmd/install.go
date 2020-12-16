@@ -132,8 +132,8 @@ func install(cmd *cobra.Command, args []string) {
 // installCmd represents the install command
 var installCmd = &cobra.Command{
 	Use:   "install",
-	Short: "Download and install your desired go version",
-	Long: `Download and install any go version you want.
+	Short: "Download and install your desired Go SDK version",
+	Long: `Download and install any Go SDK version you want.
 Just specify the version number without "go" prefix.
 
 ex) $ gvm install 1.15.5 // install go v1.15.5

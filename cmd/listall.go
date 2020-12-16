@@ -23,17 +23,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listallCmd represents the listall command
-var listallCmd = &cobra.Command{
-	Use:   "listall",
-	Short: "List all the version you can use.",
-	Long: `List all the version you can use.
-It shows locally installed version as green, and currently using version as red.
-system means the go version of the your system, not installed by gvm.`,
-	Args: cobra.MaximumNArgs(1),
-	Run:  listAll,
-}
-
 func getRemoteList() []string {
 	doc, err := goquery.NewDocument(downloadPage)
 	if err != nil {
@@ -135,6 +124,17 @@ func listAll(cmd *cobra.Command, args []string) {
 	fmt.Println("remote go SDK list\n--")
 
 	columnPrint(remoteList)
+}
+
+// listallCmd represents the listall command
+var listallCmd = &cobra.Command{
+	Use:   "listall",
+	Short: "List all the Go versions you can install/use.",
+	Long: `List all the Go versions you can install/use.
+It shows locally installed version(s) as green, and currently using version as red.
+system means the go version of the your system, not installed by gvm.`,
+	Args: cobra.MaximumNArgs(1),
+	Run:  listAll,
 }
 
 func init() {

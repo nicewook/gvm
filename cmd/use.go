@@ -210,8 +210,8 @@ func use(cmd *cobra.Command, args []string) {
 // useCmd represents the use command
 var useCmd = &cobra.Command{
 	Use:   "use",
-	Short: "Changes the go SDK version to you desired.",
-	Long: `Changes the go SDK version to you desired.
+	Short: "Changes the Go SDK version to your desired version.",
+	Long: `Changes the Go SDK version to your desired version.
 
 ex) $ gvm use 1.13.2`,
 	Args: cobra.MaximumNArgs(1),
