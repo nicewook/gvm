@@ -68,6 +68,12 @@ func renameToGo(s string) string {
 	return filepath.Join(dir, "go.exe")
 }
 
+func renameToGoVersion(s, versionExe string) string {
+	// get directory
+	dir := filepath.Dir(s)
+	return filepath.Join(dir, versionExe)
+}
+
 func find(slice []string, val string) (int, bool) {
 	for i, item := range slice {
 		if item == val {

@@ -42,7 +42,6 @@ func useSystemGo() {
 
 	for _, fn := range fNames {
 		ver := strings.TrimRight(fn, ".exe")
-		fmt.Println(ver)
 		if isGoVersionString(ver) {
 			fmtV.Printf("trying to use system Go SDK: %s\n", ver)
 
@@ -55,8 +54,12 @@ func useSystemGo() {
 
 			// if not system go, copy to go<version>.exe and remove current using go.exe
 			curGoExeVersion := getCurGoExeVersion()
-			copyFile(curGoExePath, curGoExeVersion)
+			fmt.Println("a")
+			copyFile(curGoExePath, renameToGoVersion(curGoExePath, curGoExeVersion))
+			fmt.Println("b")
+
 			removeFile(curGoExePath)
+			fmt.Println("c")
 
 			// copy
 			curGoExe := filepath.Join(systemGoPath, ver+".exe")
@@ -139,7 +142,8 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
 	// so we are ready to change go version
 	curGoExeVersion := getCurGoExeVersion()
-	copyFile(curGoExePath, curGoExeVersion)
+	fmt.Println("cur: ", curGoExePath, curGoExeVersion)
+	copyFile(curGoExePath, renameToGoVersion(curGoExePath, curGoExeVersion))
 	removeFile(curGoExePath)
 
 	copyFile(useExeFullPath, renameToGo(useExeFullPath))
@@ -172,6 +176,11 @@ func getAllGoExePath() []string {
 func onlyOneGoExeAllowed() {
 
 	goExeFiles := getAllGoExePath()
+	if len(goExeFiles) <= 1 {
+		fmtV.Printf("go.exe count: %s, no other go.exe\n", len(goExeFiles))
+		return
+	}
+	fmtV.Printf("go.exe count: %s\n", len(goExeFiles))
 	for _, v := range goExeFiles {
 		if strings.Contains(v, goPath) {
 			if err := os.Remove(v); err != nil {
