@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -26,17 +27,6 @@ import (
 
 	"github.com/spf13/cobra"
 )
-
-// useCmd represents the use command
-var useCmd = &cobra.Command{
-	Use:   "use",
-	Short: "Changes the go SDK version to you desired.",
-	Long: `Changes the go SDK version to you desired.
-
-ex) $ gvm use 1.13.2`,
-	Args: cobra.MaximumNArgs(1),
-	Run:  use,
-}
 
 func useSystemGo() {
 
@@ -157,7 +147,45 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 	fmt.Printf("now we are using %s ", getCurGoExeVersion())
 }
 
+func getAllGoExePath() []string {
+	cmd := exec.Command("where", "go.exe")
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+	defer cmd.Wait()
+
+	var goExeFiles []string
+	buff := bufio.NewScanner(stdout)
+	for buff.Scan() {
+		goExeFiles = append(goExeFiles, buff.Text())
+	}
+
+	fmtV.Println("current go.exe files.", goExeFiles)
+	return goExeFiles
+}
+
+func onlyOneGoExeAllowed() {
+
+	goExeFiles := getAllGoExePath()
+	for _, v := range goExeFiles {
+		if strings.Contains(v, goPath) {
+			if err := os.Remove(v); err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	goExeFiles = getAllGoExePath() // see the result
+}
+
 func use(cmd *cobra.Command, args []string) {
+
+	onlyOneGoExeAllowed()
 	if len(args) <= 0 {
 		curVer := getCurGoVersion()
 		if _, isSystem := getCurGoExePath(); isSystem {
@@ -168,6 +196,17 @@ func use(cmd *cobra.Command, args []string) {
 		return
 	}
 	useVersion(args[0])
+}
+
+// useCmd represents the use command
+var useCmd = &cobra.Command{
+	Use:   "use",
+	Short: "Changes the go SDK version to you desired.",
+	Long: `Changes the go SDK version to you desired.
+
+ex) $ gvm use 1.13.2`,
+	Args: cobra.MaximumNArgs(1),
+	Run:  use,
 }
 
 func init() {
