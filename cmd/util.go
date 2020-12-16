@@ -220,7 +220,7 @@ func getCurGoExePath() (string, bool) {
 	curGoExePath := strings.TrimSpace(string(b)) // needed to remove space
 
 	var isSystemGo bool
-	fmtV.Printf("currently using %s\n", curGoExePath)
+	fmtV.Printf("currently using %s\n", makeColorString(colorGreen, curGoExePath))
 	if strings.Contains(
 		strings.ToLower(curGoExePath),
 		strings.ToLower(goRoot),

@@ -79,10 +79,12 @@ func columnPrint(list []string) {
 	curVer := getCurGoVersion()
 	_, isSystemGo := getCurGoExePath()
 	if isSystemGo {
+		fmtV.Printf("current go version: %s\n\n", makeColorString(colorGreen, systemGo+", "+curVer))
 		curVer = systemGo
+	} else {
+		fmtV.Printf("current go version: %s\n\n", makeColorString(colorGreen, curVer))
 	}
 
-	fmtV.Printf("current go version: %s\nis system go? %v\n\n", curVer, isSystemGo)
 	// column print
 	count := len(list)
 	totalRows := 30
@@ -133,8 +135,8 @@ var listallCmd = &cobra.Command{
 	Long: `List all the Go versions you can install/use.
 It shows locally installed version(s) as green, and currently using version as red.
 system means the go version of the your system, not installed by gvm.`,
-	Args: cobra.MaximumNArgs(1),
-	Run:  listAll,
+	// Args: cobra.MaximumNArgs(1),
+	Run: listAll,
 }
 
 func init() {
