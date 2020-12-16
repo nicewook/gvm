@@ -47,8 +47,8 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "gvm",
-	Short: `"gvm" is go language version manager for Windows`,
-	Long: `"gvm" is go language version manager for Windows. 
+	Short: `"gvm" is Go Programming language version manager for Windows`,
+	Long: `""gvm" is Go Programming language version manager for Windows. 
 You can install/uninstall any version you want to use 
 and choose the version what you want to use.`,
 	// Uncomment the following line if your bare application
