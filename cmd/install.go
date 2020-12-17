@@ -57,18 +57,18 @@ func installOneVersion(version string) {
 	// check regex of the version name
 	if isGoVersionString(installVersion) == false {
 		fmt.Printf("%s is not proper go version format\n", makeColorString(colorRed, version))
-		os.Exit(0)
+		return
 	} else {
 		fmtV.Printf("%s is good go version format\n", makeColorString(colorGreen, version))
 	}
 	// check the version exist or already downloaded
 	if alreadyInstalled(installVersion) {
 		fmt.Printf("%s is already installed", makeColorString(colorRed, installVersion))
-		os.Exit(0)
+		return
 	}
 	if isExistRemote(installVersion) == false {
 		fmt.Printf("%s is not existing version\n", makeColorString(colorRed, installVersion))
-		os.Exit(0)
+		return
 	}
 
 	fmtV.Printf("start to install %s\n--\n", installVersion)
