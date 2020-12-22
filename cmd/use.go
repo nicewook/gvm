@@ -181,8 +181,19 @@ func onlyOneGoExeAllowed() {
 		return
 	}
 	fmtV.Printf("go.exe count: %s\n", len(goExeFiles))
+
+	var systemGoExist bool
 	for _, v := range goExeFiles {
+		if strings.Contains(v, goRoot) {
+			systemGoExist = true
+		}
+	}
+
+	for i, v := range goExeFiles {
 		if strings.Contains(v, goPath) {
+			if i == 0 && systemGoExist == false { // one go.exe should exist
+				continue
+			}
 			if err := os.Remove(v); err != nil {
 				log.Fatal(err)
 			}

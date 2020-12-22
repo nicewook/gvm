@@ -111,7 +111,7 @@ func columnPrint(list []string) {
 				}
 
 			} else {
-				verMsg := lefAlignString(ver)
+				verMsg := leftAlignString(ver)
 				fmt.Print(verMsg)
 			}
 		}

@@ -99,8 +99,8 @@ const (
 	colorWhite  = "\033[37m"
 )
 
-func lefAlignString(msg string) string {
-	return fmt.Sprintf("%-20v", msg)
+func leftAlignString(msg string) string {
+	return fmt.Sprintf("%-16v", msg)
 }
 
 func addStar(msg string) string {
@@ -127,7 +127,7 @@ func makeColorString(color string, msg string) string {
 
 func colorPrintLeftAlign(color string, msg string) error {
 
-	return colorPrint(color, lefAlignString(msg))
+	return colorPrint(color, leftAlignString(msg))
 }
 
 func goroot(version string) (string, error) {
