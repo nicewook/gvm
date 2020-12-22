@@ -54,12 +54,8 @@ func useSystemGo() {
 
 			// if not system go, copy to go<version>.exe and remove current using go.exe
 			curGoExeVersion := getCurGoExeVersion()
-			fmt.Println("a")
 			copyFile(curGoExePath, renameToGoVersion(curGoExePath, curGoExeVersion))
-			fmt.Println("b")
-
 			removeFile(curGoExePath)
-			fmt.Println("c")
 
 			// copy
 			curGoExe := filepath.Join(systemGoPath, ver+".exe")
@@ -142,13 +138,13 @@ func useVersion(version string) { // ex) version == 1.15.2 (without "go")
 
 	// so we are ready to change go version
 	curGoExeVersion := getCurGoExeVersion()
-	fmt.Println("cur: ", curGoExePath, curGoExeVersion)
+	fmt.Printf("We used %s, %s\n", curGoExePath, makeColorString(colorGreen, strings.TrimSuffix(curGoExeVersion, ".exe")))
 	copyFile(curGoExePath, renameToGoVersion(curGoExePath, curGoExeVersion))
 	removeFile(curGoExePath)
 
 	copyFile(useExeFullPath, renameToGo(useExeFullPath))
 
-	fmt.Printf("now we are using %s ", getCurGoExeVersion())
+	fmt.Printf("now we are using %s\n", makeColorString(colorGreen, getCurGoExeVersion()))
 }
 
 func getAllGoExePath() []string {
