@@ -52,8 +52,10 @@ func useSystemGo() {
 				return
 			}
 
-			// if not system go, copy to go<version>.exe and remove current using go.exe
+			// if using go.exe is not system go,
+			// copy to go<version>.exe and remove current using go.exe
 			curGoExeVersion := getCurGoExeVersion()
+			fmt.Printf("We used %s, %s\n", curGoExePath, makeColorString(colorGreen, strings.TrimSuffix(curGoExeVersion, ".exe")))
 			copyFile(curGoExePath, renameToGoVersion(curGoExePath, curGoExeVersion))
 			removeFile(curGoExePath)
 
@@ -61,6 +63,8 @@ func useSystemGo() {
 			curGoExe := filepath.Join(systemGoPath, ver+".exe")
 			goExe := filepath.Join(systemGoPath, "go.exe")
 			copyFile(curGoExe, goExe)
+
+			fmt.Printf("now we are using %s\n", makeColorString(colorGreen, getCurGoExeVersion()))
 			return
 		}
 	}
@@ -178,6 +182,7 @@ func onlyOneGoExeAllowed() {
 	}
 	fmtV.Printf("go.exe count: %s\n", len(goExeFiles))
 
+	// check systemGo exist
 	var systemGoExist bool
 	for _, v := range goExeFiles {
 		if strings.Contains(v, goRoot) {
@@ -185,8 +190,10 @@ func onlyOneGoExeAllowed() {
 		}
 	}
 
+	// if systemGoExist, remove all go.exe in goPath
+	// or leave the first go.exe and remove others all
 	for i, v := range goExeFiles {
-		if strings.Contains(v, goPath) {
+		if strings.Contains(v, goRoot) == false {
 			if i == 0 && systemGoExist == false { // one go.exe should exist
 				continue
 			}
