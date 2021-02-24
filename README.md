@@ -55,6 +55,7 @@ $ gvm list
 ```
 $ gvm listall 
 ```
+![gvm listall command](./gif/gvm-listall.gif)
 
 ### install
 
@@ -63,7 +64,7 @@ $ gvm listall
 - It can install multiple versions at once.
 
 ```
-$ gvm install 1.13.1 1.13.2
+$ gvm install 1.14.1 1.14.2
 ```
 
 ![gvm install command](./gif/gvm-install.gif)
@@ -78,6 +79,8 @@ $ gvm install 1.13.1 1.13.2
 $ gvm uninstall 1.13.1 1.13.2
 ```
 
+![gvm uninstall command](./gif/gvm-uninstall.gif)
+
 ### use
 
 `use` command changes using go SDK versions to desired.
@@ -91,8 +94,10 @@ $ gvm use
 
 $ gvm use system
 
-$ gvm use 1.13.2
+$ gvm use 1.15.6
 ```
+
+![gvm use command](./gif/gvm-use.gif)
 
 ## Contact
 

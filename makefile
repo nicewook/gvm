@@ -1,4 +1,4 @@
-GO=go1.15.5.exe
+GO=go1.16.exe
 
 all:
 	$(GO) build -o gvm.exe main.go
